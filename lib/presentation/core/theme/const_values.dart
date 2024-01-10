@@ -1,5 +1,5 @@
 const borderRadius = 15.0;
-const borderWidth = 0.25;
+const borderWidth = 1.0;
 // Font Size:
 const h1 = 25.0;
 const h2 = 20.0;

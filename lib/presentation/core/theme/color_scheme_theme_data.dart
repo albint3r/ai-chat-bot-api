@@ -49,7 +49,8 @@ class ColorTheme {
         background: Color(0xff343540),
         onBackground: Color(0xffffffff),
         surface: Color(0xfffdc234),
-        onSurface: Color(0xff000000),
+        // this color affects the border of the text field.
+        onSurface: Color(0xff484953),
         // secondaryContainer: Color(0xff9fcbf1),
         // onSecondaryContainer: Color(0xff0e1114),
         // tertiary: Color(0xff0091ea),

@@ -25,8 +25,7 @@ class CustomPrimaryCard extends StatelessWidget {
           Radius.circular(borderRadius),
         ),
         border: Border.all(
-          color: colorScheme.onBackground,
-          width: borderWidth,
+          color: colorScheme.onSurface,
         ),
       ),
       child: child,

@@ -9,7 +9,6 @@ import '../../domain/chatbot/i_chatbot_facade.dart';
 class ChatBotFacadeImpl implements IChatBotFacade {
   final _formGroup = FormGroup({
     'question': FormControl<String>(
-      validators: [Validators.required],
     )
   });
 
