@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../gen/assets.gen.dart';
+import 'avatar_picture.dart';
 import 'top_row_indicators.dart';
 
 class BodyChatBot extends StatelessWidget {
@@ -10,10 +12,8 @@ class BodyChatBot extends StatelessWidget {
     return const Column(
       children: [
         TopRowIndicators(),
-        CircleAvatar(
-          child: Text('T'),
-        ),
-        Text('What want to know about Alberto Professional experience?'),
+        AvatarPicture(),
+        Text('What want to know about Alberto?'),
       ],
     );
   }
