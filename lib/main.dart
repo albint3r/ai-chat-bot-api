@@ -9,5 +9,5 @@ Future<void> main() async {
   await configureDependencies();
   final messengerKey = GlobalKey<ScaffoldMessengerState>();
   Bloc.observer = AppBlocObserver(messengerKey);
-  runApp(const App());
+  runApp(App(messengerKey));
 }

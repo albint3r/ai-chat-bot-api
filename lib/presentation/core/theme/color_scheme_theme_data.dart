@@ -46,7 +46,7 @@ class ColorTheme {
         onSecondaryContainer: Color(0xfffdfdfd),
         error: Color(0xffb00020),
         onError: Color(0xffffffff),
-        background: Color(0xffb1e3f7),
+        background: Color(0xff292e33),
         onBackground: Color(0xff000000),
         surface: Color(0xfffdc234),
         onSurface: Color(0xff000000),

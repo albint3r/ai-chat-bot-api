@@ -14,5 +14,26 @@ abstract class _$AppRouter extends RootStackRouter {
   _$AppRouter({super.navigatorKey});
 
   @override
-  final Map<String, PageFactory> pagesMap = {};
+  final Map<String, PageFactory> pagesMap = {
+    ChatBotRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ChatBotPage(),
+      );
+    }
+  };
+}
+
+/// generated route for
+/// [ChatBotPage]
+class ChatBotRoute extends PageRouteInfo<void> {
+  const ChatBotRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatBotRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatBotRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

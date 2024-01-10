@@ -22,7 +22,7 @@ class MaterialAppRouterDelegate {
       // Sets the dark theme for the app using themeConfigStyle.dark.
       darkTheme: themeConfig.dark,
       // Sets the default theme mode to dark.
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       // Sets the title of the app.
       title: title,
       // Configures the router with the provided appRouter.config().
