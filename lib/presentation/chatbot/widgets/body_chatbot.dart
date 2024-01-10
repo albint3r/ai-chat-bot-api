@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../gen/assets.gen.dart';
+import '../../core/widgets/text/text_title.dart';
 import 'avatar_picture.dart';
 import 'top_row_indicators.dart';
 
@@ -9,11 +9,11 @@ class BodyChatBot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        TopRowIndicators(),
-        AvatarPicture(),
-        Text('What want to know about Alberto?'),
+        const TopRowIndicators(),
+        const AvatarPicture(),
+        TextTitle.h1('What you want to know about Alberto?'),
       ],
     );
   }
