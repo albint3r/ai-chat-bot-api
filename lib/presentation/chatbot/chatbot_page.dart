@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../aplication/chatbot/chatbot_bloc.dart';
+import '../../injectables.dart';
 import 'widgets/body_chatbot.dart';
 
 @RoutePage()
@@ -9,8 +12,14 @@ class ChatBotPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: BodyChatBot(),
+    return BlocProvider(
+      create: (context) => getIt<ChatBotBloc>()
+        ..add(
+          const ChatBotEvent.started(),
+        ),
+      child: const Scaffold(
+        body: BodyChatBot(),
+      ),
     );
   }
 }

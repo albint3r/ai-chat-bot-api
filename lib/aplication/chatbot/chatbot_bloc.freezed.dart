@@ -167,6 +167,7 @@ abstract class _Started implements ChatBotEvent {
 /// @nodoc
 mixin _$ChatBotState {
   bool get isLoading => throw _privateConstructorUsedError;
+  FormGroup? get formGroup => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChatBotStateCopyWith<ChatBotState> get copyWith =>
@@ -179,7 +180,7 @@ abstract class $ChatBotStateCopyWith<$Res> {
           ChatBotState value, $Res Function(ChatBotState) then) =
       _$ChatBotStateCopyWithImpl<$Res, ChatBotState>;
   @useResult
-  $Res call({bool isLoading});
+  $Res call({bool isLoading, FormGroup? formGroup});
 }
 
 /// @nodoc
@@ -196,12 +197,17 @@ class _$ChatBotStateCopyWithImpl<$Res, $Val extends ChatBotState>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? formGroup = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      formGroup: freezed == formGroup
+          ? _value.formGroup
+          : formGroup // ignore: cast_nullable_to_non_nullable
+              as FormGroup?,
     ) as $Val);
   }
 }
@@ -214,7 +220,7 @@ abstract class _$$ChatBotStateImplCopyWith<$Res>
       __$$ChatBotStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading});
+  $Res call({bool isLoading, FormGroup? formGroup});
 }
 
 /// @nodoc
@@ -229,12 +235,17 @@ class __$$ChatBotStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? formGroup = freezed,
   }) {
     return _then(_$ChatBotStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      formGroup: freezed == formGroup
+          ? _value.formGroup
+          : formGroup // ignore: cast_nullable_to_non_nullable
+              as FormGroup?,
     ));
   }
 }
@@ -242,14 +253,16 @@ class __$$ChatBotStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ChatBotStateImpl implements _ChatBotState {
-  const _$ChatBotStateImpl({required this.isLoading});
+  const _$ChatBotStateImpl({required this.isLoading, this.formGroup});
 
   @override
   final bool isLoading;
+  @override
+  final FormGroup? formGroup;
 
   @override
   String toString() {
-    return 'ChatBotState(isLoading: $isLoading)';
+    return 'ChatBotState(isLoading: $isLoading, formGroup: $formGroup)';
   }
 
   @override
@@ -258,11 +271,13 @@ class _$ChatBotStateImpl implements _ChatBotState {
         (other.runtimeType == runtimeType &&
             other is _$ChatBotStateImpl &&
             (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading));
+                other.isLoading == isLoading) &&
+            (identical(other.formGroup, formGroup) ||
+                other.formGroup == formGroup));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading);
+  int get hashCode => Object.hash(runtimeType, isLoading, formGroup);
 
   @JsonKey(ignore: true)
   @override
@@ -272,11 +287,14 @@ class _$ChatBotStateImpl implements _ChatBotState {
 }
 
 abstract class _ChatBotState implements ChatBotState {
-  const factory _ChatBotState({required final bool isLoading}) =
-      _$ChatBotStateImpl;
+  const factory _ChatBotState(
+      {required final bool isLoading,
+      final FormGroup? formGroup}) = _$ChatBotStateImpl;
 
   @override
   bool get isLoading;
+  @override
+  FormGroup? get formGroup;
   @override
   @JsonKey(ignore: true)
   _$$ChatBotStateImplCopyWith<_$ChatBotStateImpl> get copyWith =>
