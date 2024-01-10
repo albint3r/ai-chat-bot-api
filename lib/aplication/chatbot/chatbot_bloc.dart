@@ -22,5 +22,8 @@ class ChatBotBloc extends Bloc<ChatBotEvent, ChatBotState> {
         ),
       );
     });
+    on<_PostQuestion>((event, emit) async {
+      await facade.postQuestion();
+    });
   }
 }

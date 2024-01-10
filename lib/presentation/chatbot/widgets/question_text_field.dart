@@ -15,15 +15,18 @@ class QuestionTextField extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return SizedBox(
-      width: 700,
+      width: textFieldWidth,
       child: ReactiveForm(
         formGroup: form.formGroup!,
         child: ReactiveTextField(
+          onSubmitted: (control) => context.read<ChatBotBloc>().add(
+            const ChatBotEvent.postQuestion(),
+          ),
           style: theme.textTheme.bodyMedium,
           decoration: InputDecoration(
             hintText: 'Message Alberto-GPT ...',
             suffixIcon: Padding(
-              padding: const EdgeInsets.only(right: 5),
+              padding: const EdgeInsets.only(right: padding),
               child: Transform.scale(
                 scale: .8,
                 child: Container(
@@ -33,14 +36,25 @@ class QuestionTextField extends StatelessWidget {
                       Radius.circular(borderRadius),
                     ),
                   ),
-                  child: IconButton(
-                    hoverColor: colorScheme.primary,
-                    color: colorScheme.background,
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.arrow_upward,
-                      size: 30,
-                    ),
+                  child: ReactiveFormConsumer(
+                    builder: (_, formGroup, __) {
+                      final control = formGroup.control('question');
+                      final question = control.value as String;
+                      return IconButton(
+                        disabledColor: colorScheme.background,
+                        hoverColor: colorScheme.primary,
+                        color: colorScheme.background,
+                        onPressed: question.isEmpty
+                            ? null
+                            : () => context.read<ChatBotBloc>().add(
+                                  const ChatBotEvent.postQuestion(),
+                                ),
+                        icon: const Icon(
+                          Icons.arrow_upward,
+                          size: 30,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
