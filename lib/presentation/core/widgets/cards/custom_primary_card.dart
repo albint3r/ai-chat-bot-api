@@ -7,28 +7,45 @@ class CustomPrimaryCard extends StatelessWidget {
     this.child,
     this.height = 65,
     this.width = 350,
+    this.onPressed,
   });
 
   final Widget? child;
   final double height;
   final double width;
+  final void Function()? onPressed;
+
+  ButtonStyle _getStyle(ColorScheme colorScheme) {
+    return OutlinedButton.styleFrom(
+      side: BorderSide(
+        color: colorScheme.onSurface,
+      ),
+      padding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(borderRadius),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(borderRadius),
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: _getStyle(colorScheme),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: padding,
         ),
-        border: Border.all(
-          color: colorScheme.onSurface,
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: child,
         ),
       ),
-      child: child,
     );
   }
 }

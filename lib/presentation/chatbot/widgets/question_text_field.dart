@@ -21,6 +21,7 @@ class QuestionTextField extends StatelessWidget {
         child: ReactiveTextField(
           style: theme.textTheme.bodyMedium,
           decoration: InputDecoration(
+            hintText: 'Message Alberto-GPT ...',
             suffixIcon: Padding(
               padding: const EdgeInsets.only(right: 5),
               child: Transform.scale(

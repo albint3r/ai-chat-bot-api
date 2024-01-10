@@ -14,9 +14,15 @@ class QuestionsSuggestion extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              QuestionCard(),
+              QuestionCard(
+                title: 'Centame sobre las tecnologias',
+                subTitle: 'de programacion que dominas',
+              ),
               Gap(10),
-              QuestionCard(),
+              QuestionCard(
+                title: 'Cual fue el reto mas grande',
+                subTitle: 'que has tenido en Data Science',
+              ),
             ],
           ),
         ),
@@ -24,9 +30,15 @@ class QuestionsSuggestion extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            QuestionCard(),
+            QuestionCard(
+              title: 'Al dejar marketing',
+              subTitle: 'que te motivo ir a la programacion',
+            ),
             Gap(10),
-            QuestionCard(),
+            QuestionCard(
+              title: 'En cuestion de bases de datos',
+              subTitle: 'cuales conoces y dominas',
+            ),
           ],
         )
       ],

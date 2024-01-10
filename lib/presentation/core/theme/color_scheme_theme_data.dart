@@ -42,7 +42,7 @@ class ColorTheme {
         onSecondary: Color(0xff000000),
         primaryContainer: Color(0xff188bf6),
         onPrimaryContainer: Color(0xfffdfdfd),
-        secondaryContainer: Color(0xfff61818),
+        secondaryContainer: Color(0xff939393),
         onSecondaryContainer: Color(0xfffdfdfd),
         error: Color(0xffb00020),
         onError: Color(0xffffffff),
