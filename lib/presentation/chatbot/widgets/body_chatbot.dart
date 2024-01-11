@@ -26,7 +26,7 @@ class BodyChatBot extends StatelessWidget {
       children: [
         const TopRowIndicators(),
         const Gap(20),
-        if (chat.answers.isNotEmpty)
+        if (chat.chatConversation.isNotEmpty)
           const Expanded(
             child: ConversationArea(),
           )

@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../domain/chatbot/answer.dart';
+import '../../domain/chatbot/i_chat_conversation.dart';
 import '../../domain/chatbot/i_chatbot_facade.dart';
 
 part 'chatbot_bloc.freezed.dart';
@@ -24,16 +25,21 @@ class ChatBotBloc extends Bloc<ChatBotEvent, ChatBotState> {
       );
     });
     on<_PostQuestion>((event, emit) async {
-      final answers = await facade.postQuestion();
-      print("1 before anser->$answers");
-      if (answers.isNotEmpty) {
-        print("2 after anser->$answers");
+      // Add Question to logs
+      final newQuestion = facade.addQuestionToConversation();
+      emit(
+        state.copyWith(
+          chatConversation: List.from(newQuestion),
+        ),
+      );
+      // Add Answer to logs
+      final newAnswer = await facade.postQuestion();
+      if (newAnswer.isNotEmpty) {
         emit(
           state.copyWith(
-            answers: List.from(answers),
+            chatConversation: List.from(newAnswer),
           ),
         );
-        print("3 STATE->${state.answers}");
       }
     });
   }

@@ -281,7 +281,8 @@ abstract class _PostQuestion implements ChatBotEvent {
 /// @nodoc
 mixin _$ChatBotState {
   bool get isLoading => throw _privateConstructorUsedError;
-  List<Answer> get answers => throw _privateConstructorUsedError;
+  List<IChatConversation> get chatConversation =>
+      throw _privateConstructorUsedError;
   FormGroup? get formGroup => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -295,7 +296,10 @@ abstract class $ChatBotStateCopyWith<$Res> {
           ChatBotState value, $Res Function(ChatBotState) then) =
       _$ChatBotStateCopyWithImpl<$Res, ChatBotState>;
   @useResult
-  $Res call({bool isLoading, List<Answer> answers, FormGroup? formGroup});
+  $Res call(
+      {bool isLoading,
+      List<IChatConversation> chatConversation,
+      FormGroup? formGroup});
 }
 
 /// @nodoc
@@ -312,7 +316,7 @@ class _$ChatBotStateCopyWithImpl<$Res, $Val extends ChatBotState>
   @override
   $Res call({
     Object? isLoading = null,
-    Object? answers = null,
+    Object? chatConversation = null,
     Object? formGroup = freezed,
   }) {
     return _then(_value.copyWith(
@@ -320,10 +324,10 @@ class _$ChatBotStateCopyWithImpl<$Res, $Val extends ChatBotState>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      answers: null == answers
-          ? _value.answers
-          : answers // ignore: cast_nullable_to_non_nullable
-              as List<Answer>,
+      chatConversation: null == chatConversation
+          ? _value.chatConversation
+          : chatConversation // ignore: cast_nullable_to_non_nullable
+              as List<IChatConversation>,
       formGroup: freezed == formGroup
           ? _value.formGroup
           : formGroup // ignore: cast_nullable_to_non_nullable
@@ -340,7 +344,10 @@ abstract class _$$ChatBotStateImplCopyWith<$Res>
       __$$ChatBotStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, List<Answer> answers, FormGroup? formGroup});
+  $Res call(
+      {bool isLoading,
+      List<IChatConversation> chatConversation,
+      FormGroup? formGroup});
 }
 
 /// @nodoc
@@ -355,7 +362,7 @@ class __$$ChatBotStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
-    Object? answers = null,
+    Object? chatConversation = null,
     Object? formGroup = freezed,
   }) {
     return _then(_$ChatBotStateImpl(
@@ -363,10 +370,10 @@ class __$$ChatBotStateImplCopyWithImpl<$Res>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      answers: null == answers
-          ? _value._answers
-          : answers // ignore: cast_nullable_to_non_nullable
-              as List<Answer>,
+      chatConversation: null == chatConversation
+          ? _value._chatConversation
+          : chatConversation // ignore: cast_nullable_to_non_nullable
+              as List<IChatConversation>,
       formGroup: freezed == formGroup
           ? _value.formGroup
           : formGroup // ignore: cast_nullable_to_non_nullable
@@ -380,18 +387,19 @@ class __$$ChatBotStateImplCopyWithImpl<$Res>
 class _$ChatBotStateImpl implements _ChatBotState {
   const _$ChatBotStateImpl(
       {required this.isLoading,
-      required final List<Answer> answers,
+      required final List<IChatConversation> chatConversation,
       this.formGroup})
-      : _answers = answers;
+      : _chatConversation = chatConversation;
 
   @override
   final bool isLoading;
-  final List<Answer> _answers;
+  final List<IChatConversation> _chatConversation;
   @override
-  List<Answer> get answers {
-    if (_answers is EqualUnmodifiableListView) return _answers;
+  List<IChatConversation> get chatConversation {
+    if (_chatConversation is EqualUnmodifiableListView)
+      return _chatConversation;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_answers);
+    return EqualUnmodifiableListView(_chatConversation);
   }
 
   @override
@@ -399,7 +407,7 @@ class _$ChatBotStateImpl implements _ChatBotState {
 
   @override
   String toString() {
-    return 'ChatBotState(isLoading: $isLoading, answers: $answers, formGroup: $formGroup)';
+    return 'ChatBotState(isLoading: $isLoading, chatConversation: $chatConversation, formGroup: $formGroup)';
   }
 
   @override
@@ -409,14 +417,15 @@ class _$ChatBotStateImpl implements _ChatBotState {
             other is _$ChatBotStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
-            const DeepCollectionEquality().equals(other._answers, _answers) &&
+            const DeepCollectionEquality()
+                .equals(other._chatConversation, _chatConversation) &&
             (identical(other.formGroup, formGroup) ||
                 other.formGroup == formGroup));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, isLoading,
-      const DeepCollectionEquality().hash(_answers), formGroup);
+      const DeepCollectionEquality().hash(_chatConversation), formGroup);
 
   @JsonKey(ignore: true)
   @override
@@ -428,13 +437,13 @@ class _$ChatBotStateImpl implements _ChatBotState {
 abstract class _ChatBotState implements ChatBotState {
   const factory _ChatBotState(
       {required final bool isLoading,
-      required final List<Answer> answers,
+      required final List<IChatConversation> chatConversation,
       final FormGroup? formGroup}) = _$ChatBotStateImpl;
 
   @override
   bool get isLoading;
   @override
-  List<Answer> get answers;
+  List<IChatConversation> get chatConversation;
   @override
   FormGroup? get formGroup;
   @override

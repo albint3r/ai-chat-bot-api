@@ -11,9 +11,9 @@ class ConversationArea extends StatelessWidget {
   Widget build(BuildContext context) {
     final chat = context.watch<ChatBotBloc>().state;
     return ListView.builder(
-      itemCount: chat.answers.length,
+      itemCount: chat.chatConversation.length,
       itemBuilder: (context, i) {
-        return TextBody(chat.answers[i].text);
+        return TextBody(chat.chatConversation[i].text);
       },
     );
   }
