@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 
 import '../../../aplication/chatbot/chatbot_bloc.dart';
 import '../../core/theme/const_values.dart';
-import '../../core/widgets/text/text_body.dart';
 import 'conversation_area.dart';
 import 'lateralQuestionArea.dart';
 import 'query_text_field.dart';
@@ -17,7 +16,6 @@ class BodyChatBot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chat = context.watch<ChatBotBloc>().state;
-    final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     if (chat.isLoading) {
       return const Center(
