@@ -6,7 +6,6 @@ import '../../domain/core/types.dart';
 @module
 abstract class RegisterModule {
   Dio getDio() {
-    // Define tus encabezados
     final Json headers = {
       'Content-Type': 'application/json',
     };

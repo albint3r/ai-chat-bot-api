@@ -1,3 +1,5 @@
+import 'answer.dart';
+
 abstract interface class IChatBotDataSource {
-  Future<void> postQuestionQA(String question);
+  Future<Answer> postQuestionQA(String question);
 }

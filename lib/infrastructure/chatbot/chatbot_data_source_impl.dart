@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../domain/chatbot/answer.dart';
 import '../../domain/chatbot/i_chatbot_data_source.dart';
+import '../../domain/core/types.dart';
 
 @Injectable(as: IChatBotDataSource)
 class ChatBotDataSourceImpl implements IChatBotDataSource {
@@ -10,7 +12,7 @@ class ChatBotDataSourceImpl implements IChatBotDataSource {
   final Dio _dio;
 
   @override
-  Future<void> postQuestionQA(String question) async {
+  Future<Answer> postQuestionQA(String question) async {
     final response = await _dio.post(
       '/chatbot/v1/qa-chatbot',
       data: {
@@ -20,5 +22,7 @@ class ChatBotDataSourceImpl implements IChatBotDataSource {
     print('*-' * 100);
     print('Response-> $response');
     print('*-' * 100);
+    final data = response.data as Json;
+    return Answer.fromJson(data);
   }
 }
