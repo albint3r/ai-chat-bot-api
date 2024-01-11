@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../domain/chatbot/answer.dart';
 import '../../../domain/chatbot/i_chat_conversation.dart';
+import '../../core/theme/const_values.dart';
 import '../../core/widgets/text/text_body.dart';
 import '../../core/widgets/text/text_title.dart';
 import '../../gen/assets.gen.dart';
@@ -28,16 +29,16 @@ class ConversationCard extends StatelessWidget {
             children: [
               if (chatConversation is Answer)
                 CircleAvatar(
-                  radius: 15,
+                  radius: borderRadius,
                   backgroundImage: Assets.images.avatar.provider(),
                 )
               else
                 CircleAvatar(
                   backgroundColor: colorScheme.primary,
-                  radius: 15,
+                  radius: borderRadius,
                   child: const TextBody('G'),
                 ),
-              const Gap(10),
+              const Gap(padding * 2),
               TextTitle.h3(
                 chatConversation is Answer ? 'Alberto Ortiz:' : 'Guess:',
               ),
@@ -45,7 +46,7 @@ class ConversationCard extends StatelessWidget {
           ),
           Row(
             children: [
-              const Gap(40),
+              const Gap(padding * 8),
               Expanded(
                 child: TextBody(chatConversation.text),
               ),
