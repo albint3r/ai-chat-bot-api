@@ -34,6 +34,7 @@ class BodyChatBot extends StatelessWidget {
           const Expanded(
             child: WellComeElements(),
           ),
+        const Gap(10),
         const QuestionTextField(),
         const Gap(40),
       ],

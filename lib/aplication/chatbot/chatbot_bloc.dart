@@ -6,6 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../domain/chatbot/answer.dart';
 import '../../domain/chatbot/i_chat_conversation.dart';
 import '../../domain/chatbot/i_chatbot_facade.dart';
+import '../../domain/chatbot/question.dart';
 
 part 'chatbot_bloc.freezed.dart';
 
