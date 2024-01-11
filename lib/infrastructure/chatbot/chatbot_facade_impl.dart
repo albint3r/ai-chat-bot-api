@@ -23,64 +23,154 @@ class ChatBotFacadeImpl implements IChatBotFacade {
 
   final _suggestedQuestions = <SuggestedQuestion>[
     const SuggestedQuestion(
-      title: "Desarrollo de Aplicaciones Móviles",
-      subTitle: "Tendencias y tecnologías emergentes",
-      text:
-          "¿Cuáles son las tendencias actuales en el desarrollo de aplicaciones móviles?",
+      title: "Formación Académica",
+      subTitle: "Educación y formación",
+      text: "¿Cuál es tu formación académica?",
     ),
     const SuggestedQuestion(
-      title: "Gestión de Proyectos de Software",
-      subTitle: "Metodologías ágiles y eficiencia",
-      text:
-          "¿Cómo implementas metodologías ágiles para optimizar la gestión de proyectos de software?",
+      title: "Especialización en Psicología",
+      subTitle: "Áreas especializadas en psicología",
+      text: "¿Cuáles son tus áreas de especialización en psicología?",
     ),
     const SuggestedQuestion(
-      title: "Seguridad en Desarrollo de Software",
-      subTitle: "Garantizando la protección de datos",
+      title: "Transición a Mercadotecnia",
+      subTitle: "Cambio de enfoque",
       text:
-          "¿Cuáles son las estrategias clave para garantizar la seguridad en el desarrollo de software?",
+          "¿Cómo surgió tu interés en la mercadotecnia después de estudiar psicología?",
     ),
     const SuggestedQuestion(
-      title: "Interfaces de Usuario Efectivas",
-      subTitle: "Creación y experiencia del usuario",
-      text:
-          "¿Cómo diseñar interfaces de usuario efectivas para mejorar la experiencia del usuario?",
+      title: "Experiencia en Mercadotecnia",
+      subTitle: "Trayectoria laboral en mercadotecnia",
+      text: "¿Cuál es tu experiencia laboral en el campo de la mercadotecnia?",
     ),
     const SuggestedQuestion(
-      title: "Innovación en Inteligencia Artificial",
-      subTitle: "Aplicaciones y aprendizaje automático",
-      text:
-          "¿Cómo implementas soluciones de inteligencia artificial y aprendizaje automático en tus proyectos?",
+      title: "Ingreso al Mundo de la Programación",
+      subTitle: "Motivación y decisión",
+      text: "¿Cómo y por qué decidiste ingresar al mundo de la programación?",
     ),
     const SuggestedQuestion(
-      title: "Compatibilidad en Desarrollo Móvil",
-      subTitle: "Adaptabilidad a diferentes dispositivos",
+      title: "Habilidades en Python, Dart y MySQL",
+      subTitle: "Competencias destacadas",
       text:
-          "¿Cómo manejas la compatibilidad y adaptabilidad de las aplicaciones móviles a diferentes dispositivos y sistemas operativos?",
+          "¿Cuáles son tus habilidades clave en Python, Dart (Flutter) y MySQL?",
     ),
     const SuggestedQuestion(
-      title: "Desarrollo de Bases de Datos",
-      subTitle: "Experiencia con MySQL",
-      text:
-          "¿Cuál es tu experiencia en la creación y gestión de bases de datos utilizando MySQL en proyectos de desarrollo?",
+      title: "Proyectos Destacados en Programación",
+      subTitle: "Logros y contribuciones",
+      text: "Háblame sobre tus proyectos más destacados en programación.",
     ),
     const SuggestedQuestion(
-      title: "Desarrollo Web y Tecnologías",
-      subTitle: "Selección de tecnologías adecuadas",
+      title: "Integración Psicología y Programación",
+      subTitle: "Sinergia de conocimientos",
       text:
-          "¿Cómo evalúas y seleccionas las tecnologías adecuadas para proyectos de desarrollo web?",
+          "¿Cómo integras tus conocimientos en psicología y mercadotecnia en tu trabajo actual como programador?",
     ),
     const SuggestedQuestion(
-      title: "Colaboración en Proyectos Open Source",
-      subTitle: "Contribuciones a comunidades de desarrollo",
+      title: "Retos Superados en Carrera Profesional",
+      subTitle: "Superación y aprendizaje",
       text:
-          "¿Has participado en proyectos de código abierto o contribuido a comunidades de desarrollo? Cuéntame sobre tu experiencia.",
+          "¿Qué retos has enfrentado y superado en tu carrera profesional hasta ahora?",
     ),
     const SuggestedQuestion(
-      title: "Desarrollo de Aplicaciones con Dart y Flutter",
-      subTitle: "Experiencia y proyectos destacados",
+      title: "Actualización en Programación y Tecnología",
+      subTitle: "Mantenimiento de conocimientos",
       text:
-          "Háblame sobre tu experiencia en el desarrollo de aplicaciones móviles con Dart y Flutter. ¿Cuáles son tus proyectos más destacados?",
+          "¿Cómo mantienes actualizados tus conocimientos en programación y tecnología?",
+    ),
+    const SuggestedQuestion(
+      title: "Colaboración en Proyectos Multidisciplinarios",
+      subTitle: "Experiencia en equipos diversos",
+      text:
+          "¿Has participado en proyectos colaborativos o en equipos multidisciplinarios?",
+    ),
+    const SuggestedQuestion(
+      title: "Motivación en Desarrollo Móvil con Flutter",
+      subTitle: "Razones y pasión",
+      text:
+          "¿Qué te motivó a especializarte en el desarrollo de aplicaciones móviles con Flutter?",
+    ),
+    const SuggestedQuestion(
+      title: "Experiencia con MySQL en Proyectos",
+      subTitle: "Manejo de bases de datos",
+      text:
+          "Háblame sobre tu experiencia con bases de datos y el manejo de MySQL en tus proyectos.",
+    ),
+    const SuggestedQuestion(
+      title: "Aplicación de Psicología en Programación",
+      subTitle: "Enfoque psicológico en desarrollo",
+      text:
+          "¿Cómo aplicas tus habilidades de psicología en tu enfoque de programación y resolución de problemas?",
+    ),
+    const SuggestedQuestion(
+      title: "Certificaciones en Programación y Especialización",
+      subTitle: "Validación de habilidades",
+      text:
+          "¿Has obtenido certificaciones relevantes en programación o en tus áreas de especialización?",
+    ),
+    const SuggestedQuestion(
+      title: "Planificación y Ejecución de Proyectos",
+      subTitle: "Proceso y estrategias",
+      text:
+          "¿Cuál es tu proceso para planificar y ejecutar un proyecto desde cero?",
+    ),
+    const SuggestedQuestion(
+      title: "Organización y Gestión del Tiempo en Proyectos",
+      subTitle: "Eficiencia y plazos",
+      text:
+          "¿Cómo te mantienes organizado y gestionas tu tiempo en proyectos con plazos ajustados?",
+    ),
+    const SuggestedQuestion(
+      title: "Atracción hacia la Programación",
+      subTitle: "Motivaciones personales",
+      text:
+          "¿Qué te atrajo de la programación que no encontraste en tus estudios previos en psicología y mercadotecnia?",
+    ),
+    const SuggestedQuestion(
+      title: "Experiencia en Enseñanza de Programación",
+      subTitle: "Compartir conocimientos",
+      text:
+          "¿Tienes experiencia en la enseñanza o capacitación en programación o temas relacionados?",
+    ),
+    const SuggestedQuestion(
+      title: "Enfoque en Problemas Complejos de Programación",
+      subTitle: "Abordaje y soluciones",
+      text:
+          "¿Cuál es tu enfoque al enfrentarte a problemas complejos de programación?",
+    ),
+    const SuggestedQuestion(
+      title: "Participación en Conferencias y Eventos",
+      subTitle: "Presencia en la comunidad",
+      text:
+          "¿Has participado en alguna conferencia o evento relacionado con tus áreas de especialización?",
+    ),
+    const SuggestedQuestion(
+      title: "Manejo de Presión y Plazos Ajustados",
+      subTitle: "Resiliencia y eficacia",
+      text:
+          "¿Cómo manejas situaciones de presión y plazos ajustados en tu trabajo diario?",
+    ),
+    const SuggestedQuestion(
+      title: "Aplicación de Técnicas de Marketing Digital en Proyectos",
+      subTitle: "Marketing en desarrollo",
+      text:
+          "Háblame sobre algún proyecto en el que hayas aplicado técnicas de marketing digital.",
+    ),
+    const SuggestedQuestion(
+      title: "Fuentes para Mantenerse Informado en Tecnología",
+      subTitle: "Recursos y actualización",
+      text:
+          "¿Cuáles son tus fuentes principales para mantenerte informado sobre las tendencias en programación y tecnología?",
+    ),
+    const SuggestedQuestion(
+      title: "Abordaje de Retroalimentación en Proyectos",
+      subTitle: "Receptividad y mejora continua",
+      text:
+          "¿Cómo abordas la retroalimentación y los comentarios en tus proyectos?",
+    ),
+    const SuggestedQuestion(
+      title: "Liderazgo de Equipos de Desarrollo",
+      subTitle: "Guiando proyectos",
+      text: "¿Has liderado equipos de desarrollo en alguno de tus proyectos?",
     ),
   ];
 
