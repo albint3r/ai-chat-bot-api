@@ -18,7 +18,7 @@ class WellComeElements extends StatelessWidget {
             children: [
               const AvatarPicture(),
               const Gap(20),
-              TextTitle.h1('What you want to know about Alberto?'),
+              TextTitle.h1('What do you want to know about Alberto?'),
             ],
           ),
         ),

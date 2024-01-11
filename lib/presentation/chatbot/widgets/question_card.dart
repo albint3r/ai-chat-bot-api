@@ -18,7 +18,7 @@ class QuestionCard extends StatelessWidget {
   final void Function()? onPressed;
 
   double _getCardRelativeWidth(double width) {
-    if (width <= screenBreakingPoint) return width * 0.45;
+    if (width <= screenBreakingPoint) return width;
     return cardSize;
   }
 

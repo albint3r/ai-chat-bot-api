@@ -31,14 +31,35 @@ class QuestionsRowBox extends StatelessWidget {
     }).toList();
   }
 
+  Expanded _getListViewCardFormat(List<Widget> questionCards) {
+    return Expanded(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: questionCards
+            .map(
+              (question) => Padding(
+                padding: const EdgeInsets.all(padding),
+                child: question,
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final chat = context.watch<ChatBotBloc>().state;
     final suggestedQuestions = chat.suggestedQuestions;
+    final width = MediaQuery.of(context).size.width;
     final questionCards = _getQuestionsCards(
       context,
       suggestedQuestions,
     );
+    if (width <= screenBreakingPoint) {
+      return _getListViewCardFormat(questionCards);
+    }
+
     return Column(
       children: [
         SizedBox(
