@@ -20,8 +20,8 @@ class QuestionTextField extends StatelessWidget {
         formGroup: form.formGroup!,
         child: ReactiveTextField(
           onSubmitted: (control) => context.read<ChatBotBloc>().add(
-            const ChatBotEvent.postQuestion(),
-          ),
+                const ChatBotEvent.postQuestion(),
+              ),
           style: theme.textTheme.bodyMedium,
           decoration: InputDecoration(
             hintText: 'Message Alberto-GPT ...',

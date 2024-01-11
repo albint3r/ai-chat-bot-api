@@ -4,5 +4,7 @@ part of 'chatbot_bloc.dart';
 class ChatBotEvent with _$ChatBotEvent {
   const factory ChatBotEvent.started() = _Started;
 
-  const factory ChatBotEvent.postQuestion() = _PostQuestion;
+  const factory ChatBotEvent.postQuestion({
+    String? textQuestion,
+  }) = _PostQuestion;
 }

@@ -27,14 +27,18 @@ class ChatBotBloc extends Bloc<ChatBotEvent, ChatBotState> {
     });
     on<_PostQuestion>((event, emit) async {
       // Add Question to logs
-      final newQuestion = facade.addQuestionToConversation();
+      final newQuestion = facade.addQuestionToConversation(
+        textQuestion: event.textQuestion,
+      );
       emit(
         state.copyWith(
           chatConversation: List.from(newQuestion),
         ),
       );
       // Add Answer to logs
-      final newAnswer = await facade.postQuestion();
+      final newAnswer = await facade.postQuestion(
+        textQuestion: event.textQuestion,
+      );
       if (newAnswer.isNotEmpty) {
         emit(
           state.copyWith(

@@ -8,7 +8,9 @@ abstract interface class IChatBotFacade {
     int n = 4,
   });
 
-  List<IChatConversation> addQuestionToConversation();
+  List<IChatConversation> addQuestionToConversation({String? textQuestion});
 
-  Future<List<IChatConversation>> postQuestion();
+  Future<List<IChatConversation>> postQuestion({
+    String? textQuestion,
+  });
 }

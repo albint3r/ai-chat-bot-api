@@ -9,11 +9,13 @@ class QuestionCard extends StatelessWidget {
     required this.title,
     required this.subTitle,
     this.cardSize = 325,
+    this.onPressed,
   });
 
   final String title;
   final String subTitle;
   final double cardSize;
+  final void Function()? onPressed;
 
   double _getCardRelativeWidth(double width) {
     if (width <= screenBreakingPoint) return width * 0.45;
@@ -27,6 +29,7 @@ class QuestionCard extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final relativeWith = _getCardRelativeWidth(width);
     return CustomPrimaryCard(
+      onPressed: onPressed,
       width: relativeWith,
       child: Padding(
         padding: const EdgeInsets.all(padding),

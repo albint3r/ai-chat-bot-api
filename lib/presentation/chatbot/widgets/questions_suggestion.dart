@@ -12,6 +12,7 @@ class QuestionsSuggestion extends StatelessWidget {
   const QuestionsSuggestion({super.key});
 
   List<Widget> _getQuestionsCards(
+    BuildContext context,
     List<IChatConversation> questions,
   ) {
     return questions.map((question) {
@@ -19,6 +20,11 @@ class QuestionsSuggestion extends StatelessWidget {
         return QuestionCard(
           title: question.title,
           subTitle: question.subTitle,
+          onPressed: () => context.read<ChatBotBloc>().add(
+                ChatBotEvent.postQuestion(
+                  textQuestion: question.text,
+                ),
+              ),
         );
       }
       return const QuestionCard(title: '', subTitle: '');
@@ -29,7 +35,10 @@ class QuestionsSuggestion extends StatelessWidget {
   Widget build(BuildContext context) {
     final chat = context.watch<ChatBotBloc>().state;
     final suggestedQuestions = chat.suggestedQuestions;
-    final questionCards = _getQuestionsCards(suggestedQuestions);
+    final questionCards = _getQuestionsCards(
+      context,
+      suggestedQuestions,
+    );
     return Column(
       children: [
         SizedBox(
@@ -50,7 +59,7 @@ class QuestionsSuggestion extends StatelessWidget {
             const Gap(padding),
             questionCards[3],
           ],
-        )
+        ),
       ],
     );
   }

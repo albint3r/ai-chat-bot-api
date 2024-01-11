@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:tobe_cv_flutter/presentation/chatbot/widgets/wellcome_elements.dart';
 
 import '../../../aplication/chatbot/chatbot_bloc.dart';
-import '../../core/widgets/text/text_title.dart';
-import 'avatar_picture.dart';
 import 'conversation_area.dart';
 import 'question_text_field.dart';
-import 'questions_suggestion.dart';
 import 'top_row_indicators.dart';
+import 'wellcome_elements.dart';
 
 class BodyChatBot extends StatelessWidget {
   const BodyChatBot({super.key});

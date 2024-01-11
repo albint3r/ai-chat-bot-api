@@ -19,19 +19,19 @@ mixin _$ChatBotEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() postQuestion,
+    required TResult Function(String? textQuestion) postQuestion,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function()? postQuestion,
+    TResult? Function(String? textQuestion)? postQuestion,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? postQuestion,
+    TResult Function(String? textQuestion)? postQuestion,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -113,7 +113,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() postQuestion,
+    required TResult Function(String? textQuestion) postQuestion,
   }) {
     return started();
   }
@@ -122,7 +122,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function()? postQuestion,
+    TResult? Function(String? textQuestion)? postQuestion,
   }) {
     return started?.call();
   }
@@ -131,7 +131,7 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? postQuestion,
+    TResult Function(String? textQuestion)? postQuestion,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -181,6 +181,8 @@ abstract class _$$PostQuestionImplCopyWith<$Res> {
   factory _$$PostQuestionImplCopyWith(
           _$PostQuestionImpl value, $Res Function(_$PostQuestionImpl) then) =
       __$$PostQuestionImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String? textQuestion});
 }
 
 /// @nodoc
@@ -190,54 +192,79 @@ class __$$PostQuestionImplCopyWithImpl<$Res>
   __$$PostQuestionImplCopyWithImpl(
       _$PostQuestionImpl _value, $Res Function(_$PostQuestionImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? textQuestion = freezed,
+  }) {
+    return _then(_$PostQuestionImpl(
+      textQuestion: freezed == textQuestion
+          ? _value.textQuestion
+          : textQuestion // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$PostQuestionImpl implements _PostQuestion {
-  const _$PostQuestionImpl();
+  const _$PostQuestionImpl({this.textQuestion});
+
+  @override
+  final String? textQuestion;
 
   @override
   String toString() {
-    return 'ChatBotEvent.postQuestion()';
+    return 'ChatBotEvent.postQuestion(textQuestion: $textQuestion)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$PostQuestionImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$PostQuestionImpl &&
+            (identical(other.textQuestion, textQuestion) ||
+                other.textQuestion == textQuestion));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, textQuestion);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PostQuestionImplCopyWith<_$PostQuestionImpl> get copyWith =>
+      __$$PostQuestionImplCopyWithImpl<_$PostQuestionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function() postQuestion,
+    required TResult Function(String? textQuestion) postQuestion,
   }) {
-    return postQuestion();
+    return postQuestion(textQuestion);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function()? postQuestion,
+    TResult? Function(String? textQuestion)? postQuestion,
   }) {
-    return postQuestion?.call();
+    return postQuestion?.call(textQuestion);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function()? postQuestion,
+    TResult Function(String? textQuestion)? postQuestion,
     required TResult orElse(),
   }) {
     if (postQuestion != null) {
-      return postQuestion();
+      return postQuestion(textQuestion);
     }
     return orElse();
   }
@@ -275,7 +302,13 @@ class _$PostQuestionImpl implements _PostQuestion {
 }
 
 abstract class _PostQuestion implements ChatBotEvent {
-  const factory _PostQuestion() = _$PostQuestionImpl;
+  const factory _PostQuestion({final String? textQuestion}) =
+      _$PostQuestionImpl;
+
+  String? get textQuestion;
+  @JsonKey(ignore: true)
+  _$$PostQuestionImplCopyWith<_$PostQuestionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

@@ -11,7 +11,7 @@ class ConversationArea extends StatelessWidget {
   Widget build(BuildContext context) {
     final chat = context.watch<ChatBotBloc>().state;
     return SizedBox(
-      width: 700,
+      width: 680,
       child: ListView.builder(
         itemCount: chat.chatConversation.length,
         itemBuilder: (context, i) {
