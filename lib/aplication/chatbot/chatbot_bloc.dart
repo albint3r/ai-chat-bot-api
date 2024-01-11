@@ -3,10 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../domain/chatbot/answer.dart';
 import '../../domain/chatbot/i_chat_conversation.dart';
 import '../../domain/chatbot/i_chatbot_facade.dart';
-import '../../domain/chatbot/question.dart';
 
 part 'chatbot_bloc.freezed.dart';
 
@@ -18,9 +16,11 @@ part 'chatbot_state.dart';
 class ChatBotBloc extends Bloc<ChatBotEvent, ChatBotState> {
   ChatBotBloc(IChatBotFacade facade) : super(ChatBotState.initial()) {
     on<_Started>((event, emit) {
+      final suggestedQuestions = facade.getRandomNSuggestedQuestion();
       emit(
         state.copyWith(
           formGroup: facade.formGroup,
+          suggestedQuestions: suggestedQuestions,
           isLoading: false,
         ),
       );

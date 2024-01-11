@@ -11,7 +11,7 @@ abstract class RegisterModule {
     };
     final options = BaseOptions(
       connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 3),
+      receiveTimeout: const Duration(seconds: 5),
       baseUrl: 'http://192.168.1.71:8000',
       headers: headers,
     );

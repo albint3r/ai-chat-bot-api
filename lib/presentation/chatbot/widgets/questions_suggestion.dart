@@ -1,44 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
+import '../../../aplication/chatbot/chatbot_bloc.dart';
+import '../../../domain/chatbot/i_chat_conversation.dart';
+import '../../../domain/chatbot/suggested_question.dart';
+import '../../core/theme/const_values.dart';
 import 'question_card.dart';
 
 class QuestionsSuggestion extends StatelessWidget {
   const QuestionsSuggestion({super.key});
 
+  List<Widget> _getQuestionsCards(
+    List<IChatConversation> questions,
+  ) {
+    return questions.map((question) {
+      if (question is SuggestedQuestion) {
+        return QuestionCard(
+          title: question.title,
+          subTitle: question.subTitle,
+        );
+      }
+      return const QuestionCard(title: '', subTitle: '');
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final chat = context.watch<ChatBotBloc>().state;
+    final suggestedQuestions = chat.suggestedQuestions;
+    final questionCards = _getQuestionsCards(suggestedQuestions);
+    return Column(
       children: [
         SizedBox(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              QuestionCard(
-                title: 'Centame sobre las tecnologias',
-                subTitle: 'de programacion que dominas',
-              ),
-              Gap(10),
-              QuestionCard(
-                title: 'Cual fue el reto mas grande',
-                subTitle: 'que has tenido en Data Science',
-              ),
+              questionCards[0],
+              const Gap(padding),
+              questionCards[1],
             ],
           ),
         ),
-        Gap(10),
+        const Gap(10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            QuestionCard(
-              title: 'Al dejar marketing',
-              subTitle: 'que te motivo ir a la programacion',
-            ),
-            Gap(10),
-            QuestionCard(
-              title: 'En cuestion de bases de datos',
-              subTitle: 'cuales conoces y dominas',
-            ),
+            questionCards[2],
+            const Gap(padding),
+            questionCards[3],
           ],
         )
       ],

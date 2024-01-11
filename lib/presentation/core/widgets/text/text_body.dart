@@ -22,7 +22,7 @@ class TextBody extends StatelessWidget {
         color: color,
         fontSize: fontSize,
       ),
-      maxLines: 3,
+      maxLines: 15,
     );
   }
 }
