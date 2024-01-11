@@ -17,8 +17,10 @@ class ChatBotPage extends StatelessWidget {
         ..add(
           const ChatBotEvent.started(),
         ),
-      child: const Scaffold(
-        body: BodyChatBot(),
+      child: const SafeArea(
+        child: Scaffold(
+          body: BodyChatBot(),
+        ),
       ),
     );
   }

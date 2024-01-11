@@ -31,6 +31,7 @@ dependencies:
   gap: ^3.0.1
   get_it: ^7.6.6
   reactive_forms: ^16.1.1
+  http: ^0.13.6
 
 dev_dependencies:
   auto_route_generator: ^7.3.2
