@@ -7,8 +7,8 @@ import '../../core/widgets/text/text_body.dart';
 import '../../core/widgets/text/text_title.dart';
 import '../../gen/assets.gen.dart';
 
-class SingleChatLog extends StatelessWidget {
-  const SingleChatLog({
+class ConversationCard extends StatelessWidget {
+  const ConversationCard({
     super.key,
     required this.chatConversation,
   });

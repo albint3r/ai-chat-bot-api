@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../aplication/chatbot/chatbot_bloc.dart';
-import 'single_chat_log.dart';
+import 'conversation_card.dart';
 
 class ConversationArea extends StatelessWidget {
   const ConversationArea({super.key});
@@ -16,7 +16,7 @@ class ConversationArea extends StatelessWidget {
         itemCount: chat.chatConversation.length,
         itemBuilder: (context, i) {
           final chatConversation = chat.chatConversation[i];
-          return SingleChatLog(chatConversation: chatConversation);
+          return ConversationCard(chatConversation: chatConversation);
         },
       ),
     );

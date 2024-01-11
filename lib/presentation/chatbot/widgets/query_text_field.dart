@@ -5,8 +5,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../aplication/chatbot/chatbot_bloc.dart';
 import '../../core/theme/const_values.dart';
 
-class QuestionTextField extends StatelessWidget {
-  const QuestionTextField({super.key});
+class QueryTextField extends StatelessWidget {
+  const QueryTextField({super.key});
 
   @override
   Widget build(BuildContext context) {

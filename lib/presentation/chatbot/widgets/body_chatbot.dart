@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 
 import '../../../aplication/chatbot/chatbot_bloc.dart';
 import 'conversation_area.dart';
-import 'question_text_field.dart';
+import 'query_text_field.dart';
 import 'top_row_indicators.dart';
 import 'wellcome_elements.dart';
 
@@ -32,7 +32,7 @@ class BodyChatBot extends StatelessWidget {
             child: WellComeElements(),
           ),
         const Gap(10),
-        const QuestionTextField(),
+        const QueryTextField(),
         const Gap(40),
       ],
     );

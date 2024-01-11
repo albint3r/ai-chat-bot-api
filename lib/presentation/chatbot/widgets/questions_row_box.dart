@@ -8,8 +8,8 @@ import '../../../domain/chatbot/suggested_question.dart';
 import '../../core/theme/const_values.dart';
 import 'question_card.dart';
 
-class QuestionsSuggestion extends StatelessWidget {
-  const QuestionsSuggestion({super.key});
+class QuestionsRowBox extends StatelessWidget {
+  const QuestionsRowBox({super.key});
 
   List<Widget> _getQuestionsCards(
     BuildContext context,

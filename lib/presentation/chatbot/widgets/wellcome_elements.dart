@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/widgets/text/text_title.dart';
 import 'avatar_picture.dart';
-import 'questions_suggestion.dart';
+import 'questions_row_box.dart';
 
 class WellComeElements extends StatelessWidget {
   const WellComeElements({super.key});
@@ -22,7 +22,7 @@ class WellComeElements extends StatelessWidget {
             ],
           ),
         ),
-        const QuestionsSuggestion(),
+        const QuestionsRowBox(),
       ],
     );
   }

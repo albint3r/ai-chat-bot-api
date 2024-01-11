@@ -19,9 +19,6 @@ class ChatBotDataSourceImpl implements IChatBotDataSource {
         'text': question,
       },
     );
-    print('*-' * 100);
-    print('Response-> $response');
-    print('*-' * 100);
     final data = response.data as Json;
     return Answer.fromJson(data);
   }
