@@ -13,17 +13,17 @@ from icecream import ic
 class TestAddNewQuestions:
     @pytest.fixture
     def manager(self) -> CVSDocsManager:
-        return CVSDocsManager(files_path=['assets/QA-Test-file.csv'],
+        return CVSDocsManager(files_path=['assets/QA-Tobe-Experience.csv'],
                               repo=PineconeRepository(),
                               embeddings_model=OpenAIEmbeddings(openai_api_key=credentials_provider.open_ai_api_key))
 
     def test_load_new_files(self, manager: CVSDocsManager):
         """Test CV add correctly a new CSV Questions file"""
-        documents = manager.load_files(['assets/QA-Tobe-Experience-2.csv'])
+        documents = manager.load_files(['assets/QA-Tobe-Experience.csv'])
         result = len(documents)
-        expected = 61
+        expected = 81
         error_msg = f'1-Error: Expecte {expected}. Result: {result}'
         assert expected == result, error_msg
         # Todo: This would add the new files:
-        assert False
-        manager.add_new_data('tobecv', documents)
+        # manager.add_new_data('tobecv', documents)
+        # manager.create_index('tobecv')
