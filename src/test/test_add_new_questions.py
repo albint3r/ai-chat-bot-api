@@ -21,9 +21,9 @@ class TestAddNewQuestions:
         """Test CV add correctly a new CSV Questions file"""
         documents = manager.load_files(['assets/QA-Tobe-Experience.csv'])
         result = len(documents)
-        expected = 81
+        expected = 105
         error_msg = f'1-Error: Expecte {expected}. Result: {result}'
         assert expected == result, error_msg
         # Todo: This would add the new files:
         # manager.add_new_data('tobecv', documents)
-        # manager.create_index('tobecv')
+        manager.create_index('tobecv')
