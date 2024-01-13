@@ -29,6 +29,7 @@ class CVSDocsManager(IDocsManager):
 
     def add_new_data(self, index_name: str, new_documents: list[Document]) -> None:
         self.repo.init()
+        # Todo: Add a class that wrap the vector store object:
         index = self.repo.get(index_name)
         vectorstore = Pinecone(index, self.embeddings_model.embed_query, "text")
         documents = self._get_documents_text(new_documents, size=len(new_documents))

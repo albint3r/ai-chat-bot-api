@@ -1,6 +1,5 @@
 from typing import Any
 
-import pinecone
 from langchain_community.vectorstores import Pinecone
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -8,16 +7,13 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableSerializable
 from langchain_openai import ChatOpenAI
-from langchain_openai import OpenAIEmbeddings
-
-from credentials_provider import credentials_provider
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.repositories.i_vectors_repository import IVectorRepository
 from src.domain.chat_bot.use_case.i_chatbot_x import IChatBot
 
 
-class ChatBotX(IChatBot):
+class ChatBotT(IChatBot):
     repo: IVectorRepository
     embeddings_model: Embeddings | None = None
     index_name: str
@@ -43,8 +39,8 @@ class ChatBotX(IChatBot):
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
         self.repo.init()
         # Todo: Add a class that wrap the vector store object:
-        index = self.repo.get(self.index_name)
-        vectorstore = Pinecone(index, self.embeddings_model, "text")
+        vectorstore = self.repo.get_vectorstore(self.index_name, self.embeddings_model, "text")
+        # vectorstore = Pinecone(index, self.embeddings_model, "text")
         # Get retrievers
         retriever = vectorstore.as_retriever()
         custom_prompt = PromptTemplate.from_template(self.template)
