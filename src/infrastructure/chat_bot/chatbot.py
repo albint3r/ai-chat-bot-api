@@ -1,6 +1,5 @@
 from typing import Any
 
-import pinecone
 from langchain_community.vectorstores import Pinecone
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -8,9 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableSerializable
 from langchain_openai import ChatOpenAI
-from langchain_openai import OpenAIEmbeddings
 
-from credentials_provider import credentials_provider
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.repositories.i_vectors_repository import IVectorRepository

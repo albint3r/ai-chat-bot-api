@@ -1,11 +1,10 @@
+import pinecone
+from langchain_community.vectorstores import Pinecone
+from langchain_core.embeddings import Embeddings
 from pinecone import Index
 
 from credentials_provider import credentials_provider
 from src.domain.chat_bot.repositories.i_vectors_repository import IVectorRepository
-import pinecone
-from langchain_core.embeddings import Embeddings
-from langchain_community.vectorstores import Pinecone
-
 
 
 class PineconeRepository(IVectorRepository):
