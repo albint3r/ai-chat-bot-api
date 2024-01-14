@@ -1,20 +1,45 @@
-import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
+import 'dart:io';
 
-import '../../domain/core/types.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_intercept_to_curl/dio_intercept_to_curl.dart';
+import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
+import 'package:l/l.dart';
 
 @module
 abstract class RegisterModule {
-  Dio getDio() {
-    final Json headers = {
-      'Content-Type': 'application/json',
+  @injectable
+  BaseOptions getDioBaseOptions() {
+    final headers = {
+      HttpHeaders.acceptHeader: Headers.jsonContentType,
     };
-    final options = BaseOptions(
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 5),
+    return BaseOptions(
       baseUrl: 'http://192.168.1.71:8000',
       headers: headers,
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 5),
     );
-    return Dio(options);
+  }
+
+  @injectable
+  Iterable<Interceptor> getInterceptors() {
+    if (kDebugMode) {
+      return [
+        LogInterceptor(logPrint: l.d),
+        DioInterceptToCurl(),
+      ];
+    }
+    return [];
+  }
+
+  @singleton
+  Dio getDio(
+    BaseOptions options,
+    Iterable<Interceptor> interceptors,
+  ) {
+    final dio = Dio(options);
+    dio.interceptors.addAll(interceptors);
+    // ..add(auth);
+    return dio;
   }
 }
