@@ -19,6 +19,11 @@ class IVectorRepository(BaseModel, ABC):
     def get(self, index_name: str):
         """Retrival the index db"""
 
+
+    @abstractmethod
+    def get_vectorstore(self, index_name: str, embeddings: Embeddings, text_key='text'):
+        """Create vectorstore connection"""
+
     @validate_call()
     @abstractmethod
     def create(self, index_name: str, dimension=1536, metric='cosine'):

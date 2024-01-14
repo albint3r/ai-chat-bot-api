@@ -29,10 +29,9 @@ class CVSDocsManager(IDocsManager):
 
     def add_new_data(self, index_name: str, new_documents: list[Document]) -> None:
         self.repo.init()
-        index = self.repo.get(index_name)
-        vectorstore = Pinecone(index, self.embeddings_model.embed_query, "text")
+        vectorstore = self.repo.get_vectorstore(self.index_name, self.embeddings_model, "text")
         documents = self._get_documents_text(new_documents, size=len(new_documents))
-        ic(f'Adding new documents question to index: {index}')
+        ic(f'Adding new documents question to index: {index_name}')
         vectorstore.add_texts(documents)
 
     def _validate_index_name(self, index_name: str) -> bool:
