@@ -1,17 +1,17 @@
 from typing import Any
 
+from fastapi import status
 from icecream import ic
-from starlette.websockets import WebSocket
+from fastapi import WebSocket
 
 from src.domain.chat_bot.errors.errors import ExistingConnectionError
 from src.domain.chat_bot.use_case.i_websocket_manager import IWebSocketManager
-from fastapi import WebSocketException, status
 
 
 class ChatConnectionManager(IWebSocketManager):
 
-    async def connect(self, websocket: WebSocket, user_id: str) -> None:
-        existing_connections = self.chat_connections.get(user_id)
+    async def connect(self, websocket: WebSocket, chat_id: str) -> None:
+        existing_connections = self.chat_connections.get(chat_id)
         if existing_connections:
             await websocket.close()
             raise ExistingConnectionError(code=status.WS_1008_POLICY_VIOLATION,
@@ -19,22 +19,22 @@ class ChatConnectionManager(IWebSocketManager):
         await websocket.accept()
         # Create new attribute on the websocket class.
         # This hold the user id to latter find him much easier
-        websocket.user_id = user_id
-        self.chat_connections[user_id] = websocket
-        ic(f'New connection from the user: {user_id} is establish with the server')
+        websocket.chat_id = chat_id
+        self.chat_connections[chat_id] = websocket
+        ic(f'New connection from the user: {chat_id} is establish with the server')
 
     async def disconnect(self, websocket: WebSocket) -> None:
-        user_id = getattr(websocket, 'user_id', None)  # Get user_id connection or None
-        if user_id in self.chat_connections:
+        chat_id = getattr(websocket, 'chat_id', None)  # Get chat_id connection or None
+        if chat_id in self.chat_connections:
+            del self.chat_connections[chat_id]
             await websocket.close()
-            del self.chat_connections[user_id]
 
-    async def brod_cast(self, message_json: dict[str, Any], user_id: str) -> None:
+    async def brod_cast(self, message_json: dict[str, Any]) -> None:
         for chat_connection in self.chat_connections.values():
             await chat_connection.send_json(message_json)
 
-    async def brod_cast_user(self, message_json: dict[str, Any], user_id: str) -> None:
-        matching_chat_connection = self.chat_connections.get(user_id)
+    async def brod_cast_user(self, message_json: dict[str, Any], chat_id: str) -> None:
+        matching_chat_connection = self.chat_connections.get(chat_id)
         if matching_chat_connection:
             await matching_chat_connection.send_json(message_json)
 
