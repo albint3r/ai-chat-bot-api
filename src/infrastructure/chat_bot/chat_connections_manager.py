@@ -9,6 +9,8 @@ from src.domain.chat_bot.use_case.i_websocket_manager import IWebSocketManager
 
 
 class ChatConnectionManager(IWebSocketManager):
+    """For more information of the implementation:
+    https://stackoverflow.com/questions/77525528/fastapi-websockets-multiple-connections-for-one-client"""
 
     async def connect(self, websocket: WebSocket, chat_id: str) -> None:
         existing_connections = self.chat_connections.get(chat_id)
