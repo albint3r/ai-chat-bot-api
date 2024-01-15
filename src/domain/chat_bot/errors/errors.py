@@ -8,3 +8,7 @@ class ErrorFormatIndexName(Exception):
 
 class ExistingConnectionError(WebSocketException):
     """Raise an Error When the websocket connection already exist"""
+
+
+class ConnectionNotExist(WebSocketException):
+    """Raise an Error When the websocket connection already exist"""

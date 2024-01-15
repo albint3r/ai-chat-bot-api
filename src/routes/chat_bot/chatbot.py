@@ -1,10 +1,10 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, WebSocketException, status
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from icecream import ic
 from langchain_openai import OpenAIEmbeddings
 
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
-from src.domain.chat_bot.errors.errors import ExistingConnectionError
+from src.domain.chat_bot.errors.errors import ExistingConnectionError, ConnectionNotExist
 from src.infrastructure.chat_bot.chat_connections_manager import chat_connection_manager
 from src.infrastructure.chat_bot.chatbot_x import ChatBotX
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository

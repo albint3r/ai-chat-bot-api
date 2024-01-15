@@ -1,8 +1,8 @@
 from typing import Any
 
+from fastapi import WebSocket
 from fastapi import status
 from icecream import ic
-from fastapi import WebSocket
 
 from src.domain.chat_bot.errors.errors import ExistingConnectionError
 from src.domain.chat_bot.use_case.i_websocket_manager import IWebSocketManager
@@ -24,10 +24,10 @@ class ChatConnectionManager(IWebSocketManager):
         ic(f'New connection from the user: {chat_id} is establish with the server')
 
     async def disconnect(self, websocket: WebSocket) -> None:
-        chat_id = getattr(websocket, 'chat_id', None)  # Get chat_id connection or None
+        chat_id = getattr(websocket, 'chat_id', None)
+        # Get chat_id connection or None
         if chat_id in self.chat_connections:
             del self.chat_connections[chat_id]
-            await websocket.close()
 
     async def brod_cast(self, message_json: dict[str, Any]) -> None:
         for chat_connection in self.chat_connections.values():
