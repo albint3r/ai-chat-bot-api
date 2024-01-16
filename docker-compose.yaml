@@ -1,14 +1,40 @@
 version: "3"
 
 services:
+  db:
+    restart: always
+    container_name: "chat_ai_db"
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chat
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./src/db/:/docker-entrypoint-initdb.d  # Run all the scrips in the sql_scripts
+    networks:
+      - mysql  # Unir este servicio a la red 'mysql'
+
+
   api:
     restart: always
-    container_name: "tobe_cv"
-    image: "tobe_cv"
+    container_name: "chat_ai_api"
+    image: "chat_ai_api"
     build: .
     ports:
       - "8000:8000"
     volumes:
-      - .:/tobe_cv
+      - .:/chat_ai
     env_file:
       - .env
+    depends_on:
+      - db
+    networks:
+      - mysql  # Unir este servicio a la red 'mysql'
+
+networks:
+  mysql:
+    external: False
+
+volumes:
+  mysql-data:  # Definición del volumen para MySQL
