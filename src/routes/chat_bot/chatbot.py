@@ -3,12 +3,13 @@ from typing import Annotated
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, HTTPException, status
 from icecream import ic
 from langchain.memory import ConversationBufferMemory
+from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 
-from credentials_provider import credentials_provider
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.errors.errors import ExistingConnectionError
+from src.domain.chat_bot.schemas.schemas import RequestDocument
 from src.infrastructure.chat_bot.chat_connections_manager import chat_connection_manager
 from src.infrastructure.chat_bot.chatbot_qa_with_memory import ChatBotQAWithMemory
 from src.infrastructure.chat_bot.chatbot_x import ChatBotX
@@ -34,6 +35,18 @@ async def create_new_index(files: Annotated[list[str], Depends(CVSDocsManager.ge
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail='Unexpected error happened in the Vector Server')
+
+
+@route.post("/update-index/")
+async def update_index(documents: list[RequestDocument], index_name: str):
+    try:
+        csv_docs_manager = CVSDocsManager(files_path=[], repo=PineconeRepository(), embeddings_model=OpenAIEmbeddings())
+        csv_docs_manager.repo.init()
+        new_documents = [Document(**doc.model_dump()) for doc in documents]
+        csv_docs_manager.add_new_data(index_name, new_documents)
+        return {"ok": 200}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Fatal Error: {e}')
 
 
 @route.post('/v1/qa-chatbot')

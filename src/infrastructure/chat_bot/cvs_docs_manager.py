@@ -65,8 +65,9 @@ class CVSDocsManager(IDocsManager):
         return documents
 
     def add_new_data(self, index_name: str, new_documents: list[Document]) -> None:
+        ic()
         self.repo.init()
-        vectorstore = self.repo.get_vectorstore(self.index_name, self.embeddings_model, "text")
+        vectorstore = self.repo.get_vectorstore(index_name, self.embeddings_model, "text")
         documents = self._get_documents_text(new_documents, size=len(new_documents))
         ic(f'Adding new documents question to index: {index_name}')
         vectorstore.add_texts(documents)
