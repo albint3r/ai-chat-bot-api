@@ -80,6 +80,7 @@ class CVSDocsManager(IDocsManager):
         # Create OpenAI Model and Init Pinecone
         if not self._validate_index_name(index_name):
             raise ErrorFormatIndexName('Can only contain lowercase letters, numbers, and hyphens.')
+
         self.repo.init()
         # Create index if not exist
         if index_name not in pinecone.list_indexes():
@@ -92,6 +93,8 @@ class CVSDocsManager(IDocsManager):
         return Pinecone.from_existing_index(index_name, self.embeddings_model)
 
     def get_index(self, index_name: str) -> Pinecone:
+        if not self._validate_index_name(index_name):
+            raise ErrorFormatIndexName('Can only contain lowercase letters, numbers, and hyphens.')
         return Pinecone.from_existing_index(index_name, self.embeddings_model)
 
     def search_similarity(self, index_name: str, query: str) -> list[Document]:

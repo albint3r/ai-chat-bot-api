@@ -1,10 +1,11 @@
 from typing import Annotated
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, HTTPException, status
 from icecream import ic
 from langchain.memory import ConversationBufferMemory
 from langchain_openai import OpenAIEmbeddings
 
+from credentials_provider import credentials_provider
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.errors.errors import ExistingConnectionError
@@ -24,9 +25,15 @@ async def create_upload_file(response: Annotated[dict, Depends(CVSDocsManager.sa
 
 
 @route.post("/create-index/")
-async def create_new_index(files: Annotated[dict, Depends(CVSDocsManager.get_all_upload_files)]):
-    ic(files)
-    return 'Hola Mundo'
+async def create_new_index(files: Annotated[list[str], Depends(CVSDocsManager.get_all_upload_files)], index_name: str):
+    csv_docs_manager = CVSDocsManager(files_path=files, repo=PineconeRepository(), embeddings_model=OpenAIEmbeddings())
+    csv_docs_manager.repo.init()
+    response = csv_docs_manager.create_index(index_name)
+    if response:
+        return {"ok": 200}
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='Unexpected error happened in the Vector Server')
 
 
 @route.post('/v1/qa-chatbot')
