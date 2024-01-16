@@ -10,6 +10,7 @@ from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
 from src.domain.chat_bot.use_case.i_docs_manager import IDocsManager
 
 
+# Todo: Let's think how to refactor this tool to simplify . If is not possible let it like now.
 class CVSDocsManager(IDocsManager):
 
     def _get_documents_text(self, documents: list[Document], size: int = 2) -> list[str]:
@@ -20,7 +21,10 @@ class CVSDocsManager(IDocsManager):
         self.files_path = files_path if files_path else self.files_path
         documents = []
         for file_path in self.files_path:
-            loader = CSVLoader(file_path=file_path, encoding=encoding)
+            loader = CSVLoader(file_path=file_path, encoding=encoding,
+                               # Todo: Add this fields to the load_files method in the abs class.
+                               source_column='question',
+                               metadata_columns=['question', 'category', 'answer'])
             if not documents:
                 documents = loader.load()
                 continue
