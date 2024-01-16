@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 
 from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
-from src.domain.chat_bot.use_case.i_docs_manager import IDocsManager
+from src.domain.data_manager.use_case.i_docs_manager import IDocsManager
 
 UPLOAD_FILES_PATH = "assets/uploads"
 
