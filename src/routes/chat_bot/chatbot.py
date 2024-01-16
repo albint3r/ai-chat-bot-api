@@ -50,11 +50,17 @@ async def agent_chatbot(websocket: WebSocket, chat_id: str):
         Follow Up Input: {question}
         Standalone question:"""
         CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(t1)
-        t2 = """Answer the question based only on the following context:
-        {context}
 
+        t2 = """Use the following pieces of context to answer the question at the end.
+        If you don't know the answer, just say that you don't know, don't try to make up an answer.
+        Use three sentences maximum and keep the answer as concise as possible.
+        Always say "thanks for asking!" at the end of the answer.
+    
+        {context}
+    
         Question: {question}
-        """
+    
+        Helpful Answer:"""
         ANSWER_PROMPT = ChatPromptTemplate.from_template(t2)
         DEFAULT_DOCUMENT_PROMPT = PromptTemplate.from_template(template="{page_content}")
 
