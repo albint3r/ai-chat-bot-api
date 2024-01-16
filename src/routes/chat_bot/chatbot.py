@@ -2,10 +2,12 @@ from operator import itemgetter
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from icecream import ic
+from langchain.memory import ConversationBufferMemory
+from langchain_core.documents import Document
 from langchain_core.messages import get_buffer_string, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate, format_document
-from langchain_core.runnables import RunnableParallel, RunnablePassthrough
+from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
 from langchain_core.tracers import ConsoleCallbackHandler
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
@@ -37,22 +39,10 @@ async def agent_chatbot(websocket: WebSocket, chat_id: str):
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
         repo.init()
         vectorstore = repo.get_vectorstore('tobecv', embeddings, "text")
-        retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
-        # template: str = """You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question.
-        #      If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-        #      Only respond in the language in which the question was asked.
-        #      Question: {question}
-        #      <context>
-        #      Context: {context}
-        #      </context>
-        #      Answer:"""
-        # custom_prompt = ChatPromptTemplate.from_messages([("system", template)])
-        # chain = (
-        #         RunnableParallel(context=retriever, question=RunnablePassthrough())
-        #         | custom_prompt
-        #         | llm
-        #         | StrOutputParser()
-        # )
+        retriever = vectorstore.as_retriever()
+        memory = ConversationBufferMemory(
+            return_messages=True, output_key="answer", input_key="question"
+        )
         t1 = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
 
         Chat History:
@@ -69,39 +59,60 @@ async def agent_chatbot(websocket: WebSocket, chat_id: str):
         DEFAULT_DOCUMENT_PROMPT = PromptTemplate.from_template(template="{page_content}")
 
         def _combine_documents(
-                docs, document_prompt=DEFAULT_DOCUMENT_PROMPT, document_separator="\n\n"
+                docs: list[Document], document_prompt=DEFAULT_DOCUMENT_PROMPT, document_separator="\n\n"
         ):
             doc_strings = [format_document(doc, document_prompt) for doc in docs]
             return document_separator.join(doc_strings)
 
-        _inputs = RunnableParallel(
-            standalone_question=RunnablePassthrough.assign(
-                chat_history=lambda x: get_buffer_string(x["chat_history"])
-            ) | CONDENSE_QUESTION_PROMPT
-                                | ChatOpenAI(temperature=0)
-                                | StrOutputParser(),
+        loaded_memory = RunnablePassthrough.assign(
+            chat_history=RunnableLambda(memory.load_memory_variables) | itemgetter("history"),
         )
 
-        _context = {
-            "context": itemgetter("standalone_question") | retriever | _combine_documents,
+        standalone_question = RunnableParallel(
+            standalone_question={
+                # create their own string in the value [standalone_question] this value would be inserted later.
+                "standalone_question": {
+                                           "question": lambda x: x["question"],
+                                           "chat_history": lambda x: get_buffer_string(x["chat_history"]),
+                                       }
+                                       | CONDENSE_QUESTION_PROMPT
+                                       | llm
+                                       | StrOutputParser(),
+            }
+        )
+        # Now we retrieve the documents
+        retrieved_documents = {
+            "docs": itemgetter("standalone_question") | RunnableLambda(lambda x: x['standalone_question']) | retriever,
             "question": lambda x: x["standalone_question"],
         }
+        # Now we construct the inputs for the final prompt
+        final_inputs = {
+            "context": lambda x: _combine_documents(x["docs"]),
+            "question": itemgetter("question"),
+        }
+        # And finally, we do the part that returns the answers
+        answer = {
+            "answer": final_inputs | ANSWER_PROMPT | llm | StrOutputParser(),
+            "docs": itemgetter("docs"),
+        }
+        # And now we put it all together!
+        chain = loaded_memory | standalone_question | retrieved_documents | answer
 
-        chain = _inputs | _context | ANSWER_PROMPT | ChatOpenAI()
-        chat_history = []
         while True:
-            ic(chat_history)
             data = await websocket.receive_json()
             query = Question(**data)
-            response = chain.invoke({
-                "question": query.text,
-                "chat_history": chat_history,
-            },
-                config={'callbacks': [ConsoleCallbackHandler()]})
-            chat_history.extend([HumanMessage(content=query.text), response])
+            inputs = {"question": query.text}
+            response = chain.invoke(inputs, config={'callbacks': [ConsoleCallbackHandler()]})
 
-            answer = Answer(text=response.content, )
+            ic(response)
+            answer = Answer(text=response['answer'], )
             await chat_connection_manager.brod_cast_user(answer.model_dump(), chat_id)
+            # Note that the memory does not save automatically
+            # This will be improved in the future
+            # For now you need to save it yourself
+            memory.save_context(inputs, {"answer": response["answer"]})
+            ic(memory.load_memory_variables({}))
+
     except WebSocketDisconnect:
         ic(f"Close connection with chat_id: {websocket.chat_id}")
         await chat_connection_manager.disconnect(websocket)
