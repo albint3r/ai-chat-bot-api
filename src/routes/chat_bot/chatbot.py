@@ -12,7 +12,7 @@ from src.infrastructure.chat_bot.chatbot_x import ChatBotX
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 
 route = APIRouter(prefix='/chatbot',
-                  tags=['chatbot'], )
+                  tags=['Chat Bot'], )
 
 
 @route.post('/v1/qa-chatbot')
@@ -23,8 +23,8 @@ def qa_chatbot(question: Question) -> Answer:
     return answer
 
 
-@route.websocket('/v1/ws/chat-bot')
-async def agent_chatbot(websocket: WebSocket, chat_id: str):
+@route.websocket('/v1/ws/qa-chatbot')
+async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
     await chat_connection_manager.connect(websocket, chat_id)
     try:
         chatbot = ChatBotQAWithMemory(index_name='tobecv', repo=PineconeRepository(),

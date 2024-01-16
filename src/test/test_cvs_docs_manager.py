@@ -4,7 +4,7 @@ from credentials_provider import credentials_provider
 from langchain_community.vectorstores.pinecone import Pinecone
 from langchain_openai import OpenAIEmbeddings
 from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
-from src.infrastructure.chat_bot.cvs_docs_manager import CVSDocsManager
+from src.infrastructure.data_manager.cvs_docs_manager import CVSDocsManager
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 
 

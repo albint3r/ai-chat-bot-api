@@ -1,7 +1,6 @@
 from operator import itemgetter
 from typing import Any
 
-from icecream import ic
 from langchain.memory import ConversationBufferMemory
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -26,7 +25,7 @@ class ChatBotQAWithMemory(IChatBot):
     memory: ConversationBufferMemory | None = None
 
     def generate_chain(self) -> RunnableSerializable | RunnableSerializable[Any, str]:
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+        llm = ChatOpenAI(temperature=0)
         self.repo.init()
         vectorstore = self.repo.get_vectorstore(self.index_name, self.embeddings_model, "text")
         retriever = vectorstore.as_retriever()
@@ -78,9 +77,6 @@ class ChatBotQAWithMemory(IChatBot):
     def query_question(self, query: Question, inputs: dict[str, str]) -> Answer:
         chain = self.generate_chain()
         response = chain.invoke(inputs, config={'callbacks': [ConsoleCallbackHandler()]})
-        # Note that the memory does not save automatically
-        # This will be improved in the future
-        # For now you need to save it yourself
         self.memory.save_context(inputs, {"answer": response["answer"]})
-        ic(self.memory.load_memory_variables({}))
-        return Answer(text=response['answer'], )
+        self.memory.load_memory_variables({})
+        return Answer(text=response['answer'])
