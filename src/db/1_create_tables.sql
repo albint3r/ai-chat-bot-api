@@ -19,6 +19,7 @@ CREATE TABLE chatbots(
     user_id VARCHAR(36) NOT NULL,
     name VARCHAR(36) NOT NULL,
     description VARCHAR(255) DEFAULT "",
+    index_name VARCHAR(36) NOT NULL,
     total_questions INTEGER DEFAULT 0,
     open_ai_api_key VARCHAR(255) NOT NULL,
     pinecone_api_key VARCHAR(255) NOT NULL,

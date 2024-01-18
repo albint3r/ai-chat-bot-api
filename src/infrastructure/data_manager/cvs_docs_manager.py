@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 
 from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
+from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo
 from src.domain.data_manager.use_case.i_docs_manager import IDocsManager
 from src.infrastructure.auth.auth_handler_impl import auth_handler
 
@@ -22,33 +23,33 @@ UPLOAD_FILES_PATH = "assets/uploads"
 class CVSDocsManager(IDocsManager):
 
     @staticmethod
-    def save_uploaded_file(file: UploadFile, user_id: str = Depends(auth_handler.auth_wrapper)):
-        ic(file)
-        ic(user_id)
+    def save_uploaded_file(file: UploadFile,
+                           chatbot_info: RequestUserChatbotInfo = Depends(RequestUserChatbotInfo),
+                           user_id: str = Depends(auth_handler.auth_wrapper)) -> tuple[RequestUserChatbotInfo, str]:
         try:
             user_folder = Path(UPLOAD_FILES_PATH) / user_id
             # Verificar si la carpeta de destino para el usuario existe, si no, créala.
             user_folder.mkdir(parents=True, exist_ok=True)
-
             # Guardar el archivo en la carpeta de destino para el usuario.
             file_path = user_folder / file.filename
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
-
-            return JSONResponse(content={"filename": file.filename, "message": "File uploaded successfully"})
-        except Exception as e:
-            return JSONResponse(content={"filename": file.filename, "error": str(e)}, status_code=500)
+            return chatbot_info, user_id
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='It was an error uploading the file.')
 
     @staticmethod
-    def get_all_upload_files(file_path: str | None = UPLOAD_FILES_PATH):
-        directory = Path(file_path)
+    def get_all_upload_files(user_id: str, file_path: str | None = UPLOAD_FILES_PATH) -> list[str]:
+
         try:
-            files = [archivo.name for archivo in directory.glob("*")]
+            user_folder = Path(file_path) / user_id
+            files = [str(user_folder / archivo.name) for archivo in user_folder.glob("*")]
             if files:
                 return files
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not files in your [upload] directory')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'No files in user [{user_id}] directory')
         except Exception as e:
-            return f"Error at the moment to load files: {str(e)}"
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                detail=f"Error at the moment to load files: {str(e)}")
 
     def _get_documents_text(self, documents: list[Document], size: int = 2) -> list[str]:
         return [documents[i].page_content for i in range(size)]

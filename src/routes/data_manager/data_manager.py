@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from icecream import ic
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 
@@ -41,12 +42,10 @@ async def post_new_questions(documents: list[RequestDocument], index_name: str):
 
 
 @route.post("/v1/upload-file/csv/")
-async def upload_csv_file(response: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
-    return response
-
-
-@route.post("/v1/create-chatbot/")
-async def create_user_chatbot(chatbot_info: RequestUserChatbotInfo, user_id: str = Depends(auth_handler.auth_wrapper)):
-    facade = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
-    result = facade.create_user_chatbot(chatbot_info, user_id)
-    return result
+async def upload_csv_file(data: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
+    chatbot_info, user_id = data
+    files_path = CVSDocsManager.get_all_upload_files(user_id)
+    ic(files_path)
+    # facade = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
+    # result = facade.create_user_chatbot(chatbot_info, user_id)
+    return chatbot_info
