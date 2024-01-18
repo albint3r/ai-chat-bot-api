@@ -43,9 +43,27 @@ async def post_new_questions(documents: list[RequestDocument], index_name: str):
 
 @route.post("/v1/upload-file/csv/")
 async def upload_csv_file(data: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
-    chatbot_info, user_id = data
+    # Create the cv in files
+    chatbot_info: RequestUserChatbotInfo = data[0]
+    user_id: str = data[1]
+    ic(chatbot_info)
+    # Get all the paths from the cvs
     files_path = CVSDocsManager.get_all_upload_files(user_id)
     ic(files_path)
-    # facade = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
-    # result = facade.create_user_chatbot(chatbot_info, user_id)
-    return chatbot_info
+    csv_docs_manager = CVSDocsManager(files_path=files_path,
+                                      repo=PineconeRepository(
+                                          api_key=chatbot_info.pinecone_api_key,
+                                          environment=chatbot_info.pinecone_environment,
+                                      ), embeddings_model=OpenAIEmbeddings(openai_api_key=chatbot_info.open_ai_api_key))
+    ic(csv_docs_manager)
+    csv_docs_manager.repo.init()
+    # Create the index with the information given
+    response = csv_docs_manager.create_index(chatbot_info.index_name)
+    facade = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
+    facade.create_user_chatbot(chatbot_info, user_id)
+    csv_docs_manager.delete_user_folder(user_id)
+    if response:
+        return {"ok": 200}
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail='Unexpected error happened in the Vector Server')

@@ -36,6 +36,7 @@ class IDocsManager(BaseModel, ABC):
     def get_index(self, index_name: str):
         """Create a new Index in the vector db"""
 
+
     @validate_call()
     @abstractmethod
     def search_similarity(self, index_name: str, query: str):

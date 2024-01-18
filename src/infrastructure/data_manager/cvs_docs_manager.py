@@ -40,7 +40,6 @@ class CVSDocsManager(IDocsManager):
 
     @staticmethod
     def get_all_upload_files(user_id: str, file_path: str | None = UPLOAD_FILES_PATH) -> list[str]:
-
         try:
             user_folder = Path(file_path) / user_id
             files = [str(user_folder / archivo.name) for archivo in user_folder.glob("*")]
@@ -50,6 +49,18 @@ class CVSDocsManager(IDocsManager):
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail=f"Error at the moment to load files: {str(e)}")
+
+    @staticmethod
+    def delete_user_folder(user_id: str, file_path: str | None = UPLOAD_FILES_PATH):
+        try:
+            user_folder = Path(file_path) / user_id
+            shutil.rmtree(user_folder)
+            return JSONResponse(content={"message": f"User [{user_id}] folder deleted successfully"})
+        except FileNotFoundError:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'User [{user_id}] not found')
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                detail=f"Error deleting user [{user_id}] folder: {str(e)}")
 
     def _get_documents_text(self, documents: list[Document], size: int = 2) -> list[str]:
         return [documents[i].page_content for i in range(size)]

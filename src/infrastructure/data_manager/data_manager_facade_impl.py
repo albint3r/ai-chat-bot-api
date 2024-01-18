@@ -8,11 +8,10 @@ from src.infrastructure.data_manager.data_manager_repository import DataManagerR
 class DataMangerFacadeImpl(IDataManagerFacade):
     repo: DataManagerRepository
 
-    def create_user_chatbot(self, chatbot_info: RequestUserChatbotInfo, user_id: str):
-        self.repo.create_user_chatbot(user_id, chatbot_info.name, chatbot_info.open_ai_api_key,
+    def create_user_chatbot(self, chatbot_info: RequestUserChatbotInfo, user_id: str) -> None:
+        self.repo.create_user_chatbot(user_id, chatbot_info.name, chatbot_info.index_name, chatbot_info.open_ai_api_key,
                                       chatbot_info.pinecone_api_key, chatbot_info.pinecone_environment,
                                       chatbot_info.description)
-        return ic(chatbot_info)
 
     def get_user_chatbots(self):
         pass
