@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 
 import pinecone
-from fastapi import UploadFile, status
+from fastapi import UploadFile, status, Depends
 from icecream import ic
 from langchain_community.document_loaders import CSVLoader
 from langchain_community.vectorstores.pinecone import Pinecone
@@ -13,6 +13,7 @@ from fastapi.exceptions import HTTPException
 
 from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
 from src.domain.data_manager.use_case.i_docs_manager import IDocsManager
+from src.infrastructure.auth.auth_handler_impl import auth_handler
 
 UPLOAD_FILES_PATH = "assets/uploads"
 
@@ -21,16 +22,19 @@ UPLOAD_FILES_PATH = "assets/uploads"
 class CVSDocsManager(IDocsManager):
 
     @staticmethod
-    def save_uploaded_file(file: UploadFile):
-        upload_folder = Path(UPLOAD_FILES_PATH)  # Carpeta donde se guardarán los archivos, asegúrate de que exista.
+    def save_uploaded_file(file: UploadFile, user_id: str = Depends(auth_handler.auth_wrapper)):
+        ic(file)
+        ic(user_id)
         try:
-            # Verificar si la carpeta de destino existe, si no, créala.
-            upload_folder.mkdir(parents=True, exist_ok=True)
+            user_folder = Path(UPLOAD_FILES_PATH) / user_id
+            # Verificar si la carpeta de destino para el usuario existe, si no, créala.
+            user_folder.mkdir(parents=True, exist_ok=True)
 
-            # Guardar el archivo en la carpeta de destino.
-            file_path = upload_folder / file.filename
+            # Guardar el archivo en la carpeta de destino para el usuario.
+            file_path = user_folder / file.filename
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
+
             return JSONResponse(content={"filename": file.filename, "message": "File uploaded successfully"})
         except Exception as e:
             return JSONResponse(content={"filename": file.filename, "error": str(e)}, status_code=500)

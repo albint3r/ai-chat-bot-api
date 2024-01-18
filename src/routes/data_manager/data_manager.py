@@ -1,7 +1,6 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from icecream import ic
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 
@@ -41,8 +40,8 @@ async def post_new_questions(documents: list[RequestDocument], index_name: str):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Fatal Error: {e}')
 
 
-@route.post("/v1/upload-file/")
-async def create_upload_file(response: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
+@route.post("/v1/upload-file/csv/")
+async def upload_csv_file(response: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
     return response
 
 

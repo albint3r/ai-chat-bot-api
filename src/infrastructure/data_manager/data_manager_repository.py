@@ -10,7 +10,6 @@ class DataManagerRepository(AbstractDB):
         query = "INSERT INTO chatbots (user_id, name, description, open_ai_api_key, pinecone_api_key, pinecone_environment) " \
                 f"VALUES ('{user_id}', '{name}', '{description}', '{open_ai_api_key}', '{pinecone_api_key}'," \
                 f" '{pinecone_environment}');"
-        ic(query)
         self.db.execute(query)
 
     def get_user_chatbots(self):

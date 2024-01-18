@@ -1,13 +1,9 @@
-import shutil
-from pathlib import Path
+from abc import ABC, abstractmethod
 
 from fastapi import UploadFile
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from pydantic import BaseModel, validate_call
-from abc import ABC, abstractmethod
-
-from starlette.responses import JSONResponse
 
 from src.domain.chat_bot.repositories.i_vectors_repository import IVectorRepository
 
@@ -47,5 +43,5 @@ class IDocsManager(BaseModel, ABC):
 
     @staticmethod
     @abstractmethod
-    def save_uploaded_file(file: UploadFile):
+    def save_uploaded_file(file: UploadFile, user_id: str):
         """Save Uploaded CSV Files"""
