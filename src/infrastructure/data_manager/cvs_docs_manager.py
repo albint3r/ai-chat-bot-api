@@ -71,9 +71,8 @@ class CVSDocsManager(IDocsManager):
         documents = []
         for file_path in self.files_path:
             loader = CSVLoader(file_path=file_path, encoding=encoding,
-                               # Todo: Add this fields to the load_files method in the abs class.
-                               source_column='question',
-                               metadata_columns=['question', 'category', 'answer'])
+                               # metadata_columns=['question', 'category', 'answer'],
+                               )
             if not documents:
                 documents = loader.load()
                 continue

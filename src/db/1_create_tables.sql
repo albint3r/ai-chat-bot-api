@@ -24,7 +24,8 @@ CREATE TABLE chatbots(
     open_ai_api_key VARCHAR(255) NOT NULL,
     pinecone_api_key VARCHAR(255) NOT NULL,
     pinecone_environment VARCHAR(255) NOT NULL,
-    is_live BOOLEAN DEFAULT TRUE,
+    is_live BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

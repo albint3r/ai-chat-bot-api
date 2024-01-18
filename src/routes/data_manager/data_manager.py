@@ -44,21 +44,23 @@ async def post_new_questions(documents: list[RequestDocument], index_name: str):
 @route.post("/v1/upload-file/csv/")
 async def upload_csv_file(data: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
     # Create the cv in files
+    # Todo: Refactorizar todo este metodo par dejar mas simple
+    # Es probable que borremos methodos arriba
     chatbot_info: RequestUserChatbotInfo = data[0]
     user_id: str = data[1]
-    ic(chatbot_info)
     # Get all the paths from the cvs
     files_path = CVSDocsManager.get_all_upload_files(user_id)
-    ic(files_path)
     csv_docs_manager = CVSDocsManager(files_path=files_path,
                                       repo=PineconeRepository(
                                           api_key=chatbot_info.pinecone_api_key,
                                           environment=chatbot_info.pinecone_environment,
                                       ), embeddings_model=OpenAIEmbeddings(openai_api_key=chatbot_info.open_ai_api_key))
-    ic(csv_docs_manager)
     csv_docs_manager.repo.init()
     # Create the index with the information given
+    # Todo : se debe manejar una especie de for loop cuando no se creen los indes
+    # que borre el index que no cree y siga su camino.
     response = csv_docs_manager.create_index(chatbot_info.index_name)
+
     facade = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
     facade.create_user_chatbot(chatbot_info, user_id)
     csv_docs_manager.delete_user_folder(user_id)
