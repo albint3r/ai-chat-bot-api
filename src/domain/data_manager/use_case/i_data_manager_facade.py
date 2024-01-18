@@ -1,27 +1,24 @@
-from pydantic import BaseModel
 from abc import ABC, abstractmethod
 
-from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo
+from pydantic import BaseModel
+
+from src.domain.data_manager.entities.user_chatbot import UserChatbot
 
 
 class IDataManagerFacade(BaseModel, ABC):
 
     @abstractmethod
-    def create_user_chatbot(self, chatbot_info: RequestUserChatbotInfo, user_id: str):
-        """Create a User Chatbot instance in the SQL Table"""
-
-    @abstractmethod
-    def get_user_chatbots(self):
+    def get_user_chatbots(self, user_id: str) -> list[UserChatbot]:
         """Get a User Chatbots instance in the SQL Table"""
 
     @abstractmethod
-    def get_user_chatbot(self):
+    def get_user_chatbot(self, chatbot_id: str) -> UserChatbot:
         """Get a User Chatbot instance in the SQL Table"""
 
     @abstractmethod
-    def delete_user_chatbot(self):
+    def delete_user_chatbot(self, chatbot_id: str) -> None:
         """Delete a User Chatbot instance in the SQL Table"""
 
     @abstractmethod
-    def update_user_chatbot(self):
+    def update_user_chatbot(self, chatbot_id: str, data: dict) -> None:
         """Update Information a User Chatbot instance in the SQL Table"""

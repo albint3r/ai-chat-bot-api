@@ -3,18 +3,16 @@ import shutil
 from pathlib import Path
 
 import pinecone
-from fastapi import UploadFile, status, Depends
+from fastapi import UploadFile, status
+from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 from icecream import ic
 from langchain_community.document_loaders import CSVLoader
 from langchain_community.vectorstores.pinecone import Pinecone
 from langchain_core.documents import Document
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException
 
 from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
-from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo
 from src.domain.data_manager.use_case.i_docs_manager import IDocsManager
-from src.infrastructure.auth.auth_handler_impl import auth_handler
 
 UPLOAD_FILES_PATH = "assets/uploads"
 
@@ -23,9 +21,7 @@ UPLOAD_FILES_PATH = "assets/uploads"
 class CVSDocsManager(IDocsManager):
 
     @staticmethod
-    def save_uploaded_file(file: UploadFile,
-                           chatbot_info: RequestUserChatbotInfo = Depends(RequestUserChatbotInfo),
-                           user_id: str = Depends(auth_handler.auth_wrapper)) -> tuple[RequestUserChatbotInfo, str]:
+    def save_uploaded_file(file: UploadFile, user_id: str) -> None:
         try:
             user_folder = Path(UPLOAD_FILES_PATH) / user_id
             # Verificar si la carpeta de destino para el usuario existe, si no, créala.
@@ -34,7 +30,7 @@ class CVSDocsManager(IDocsManager):
             file_path = user_folder / file.filename
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
-            return chatbot_info, user_id
+
         except Exception:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='It was an error uploading the file.')
 

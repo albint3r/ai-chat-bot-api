@@ -7,3 +7,4 @@ Lib
 Scripts
 pyvenv.cfg
 include
+.ipynb_checkpoints
