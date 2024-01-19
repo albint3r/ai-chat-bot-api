@@ -1,3 +1,5 @@
+from icecream import ic
+
 from src.db.db import AbstractDB
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
 
@@ -29,6 +31,13 @@ class DataManagerRepository(AbstractDB):
         self.db.execute(query)
 
     def update_user_chatbot(self, chatbot_id: str, data: dict) -> None:
-        update_fields = ', '.join([f"{key} = '{value}'" for key, value in data.items()])
+        update_fields = ', '.join([f"{key} = {self._format_value(value)}" for key, value in data.items()])
         query = f"UPDATE chatbots SET {update_fields} WHERE chatbot_id='{chatbot_id}';"
+        ic(query)
         self.db.execute(query)
+
+    def _format_value(self, value):
+        if isinstance(value, bool):
+            return str(value).lower()  # Convierte el valor booleano a minúsculas ('True' a 'true')
+        else:
+            return f"'{value}'"  # Envuelve otros tipos de datos en comillas simples
