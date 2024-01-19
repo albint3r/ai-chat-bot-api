@@ -1,5 +1,8 @@
+from icecream import ic
+
 from src.db.db import AbstractDB
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
+from fastapi import HTTPException, status
 
 
 class DataManagerRepository(AbstractDB):
@@ -12,11 +15,15 @@ class DataManagerRepository(AbstractDB):
         self.db.execute(query)
 
     def get_user_chatbots(self, user_id: str) -> list[UserChatbot]:
-        query = f"SELECT * FROM chatbots WHERE user_id='{user_id}';"
-        responses = self.db.query(query, fetch_all=True)
-        if responses:
-            return [UserChatbot(**response) for response in responses]
-        return []
+        try:
+            query = f"SELECT * FROM chatbots WHERE user_id='{user_id}';"
+            responses = self.db.query(query, fetch_all=True)
+            if responses:
+                return [UserChatbot(**response) for response in responses]
+            return []
+        except Exception as e:
+            ic(f'Fatal Error: {e}')
+            return []
 
     def get_user_chatbot(self, chatbot_id: str) -> UserChatbot:
         query = f"SELECT * FROM chatbots WHERE chatbot_id='{chatbot_id}';"
@@ -29,6 +36,15 @@ class DataManagerRepository(AbstractDB):
         self.db.execute(query)
 
     def update_user_chatbot(self, chatbot_id: str, data: dict) -> None:
-        update_fields = ', '.join([f"{key} = '{value}'" for key, value in data.items()])
-        query = f"UPDATE chatbots SET {update_fields} WHERE chatbot_id='{chatbot_id}';"
-        self.db.execute(query)
+        try:
+            update_fields = ', '.join([f"{key} = {self._format_value(value)}" for key, value in data.items()])
+            query = f"UPDATE chatbots SET {update_fields} WHERE chatbot_id='{chatbot_id}';"
+            self.db.execute(query)
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f'Inexplicable error: {e}')
+
+    def _format_value(self, value):
+        if isinstance(value, bool):
+            return str(value).lower()  # Convierte el valor booleano a minúsculas ('True' a 'true')
+        else:
+            return f"'{value}'"  # Envuelve otros tipos de datos en comillas simples

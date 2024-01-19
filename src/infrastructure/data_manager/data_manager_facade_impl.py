@@ -5,7 +5,7 @@ from langchain_openai import OpenAIEmbeddings
 
 from src.db.db import db
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
-from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo
+from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo, RequestChatBotActivateStatus
 from src.domain.data_manager.use_case.i_data_manager_facade import IDataManagerFacade
 from src.infrastructure.auth.auth_handler_impl import auth_handler
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
@@ -54,6 +54,15 @@ class DataMangerFacadeImpl(IDataManagerFacade):
 
     def update_user_chatbot(self, chatbot_id: str, data: dict):
         self.repo.update_user_chatbot(chatbot_id, data)
+
+    def update_user_chatbot_activate_status(self, chabot_status: RequestChatBotActivateStatus):
+        try:
+            data = chabot_status.model_dump()
+            data.pop('chatbot_id')
+            self.update_user_chatbot(chabot_status.chatbot_id, data)
+            return {'ok': 200}
+        except Exception as e:
+            return {'error': e}
 
 
 data_manager = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))

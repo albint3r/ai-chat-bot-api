@@ -6,6 +6,11 @@ class RequestDocument(BaseModel):
     metadata: dict = {}
 
 
+class RequestChatBotActivateStatus(BaseModel):
+    chatbot_id: str
+    is_active: bool
+
+
 class RequestUserChatbotInfo(BaseModel):
     """Request Schema to obtain the information to create the Chatbot User"""
     name: str
