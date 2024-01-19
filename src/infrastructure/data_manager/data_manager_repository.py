@@ -16,6 +16,7 @@ class DataManagerRepository(AbstractDB):
         responses = self.db.query(query, fetch_all=True)
         if responses:
             return [UserChatbot(**response) for response in responses]
+        return []
 
     def get_user_chatbot(self, chatbot_id: str) -> UserChatbot:
         query = f"SELECT * FROM chatbots WHERE chatbot_id='{chatbot_id}';"
