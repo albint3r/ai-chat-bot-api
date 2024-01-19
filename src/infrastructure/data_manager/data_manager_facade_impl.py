@@ -1,5 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi import UploadFile
+from icecream import ic
 from langchain_openai import OpenAIEmbeddings
 
 from src.db.db import db
@@ -32,17 +33,17 @@ class DataMangerFacadeImpl(IDataManagerFacade):
             csv_docs_manager.delete_user_folder(user_id)
             if response:
                 return {"ok": 200}
-        except Exception:
+        except Exception as e:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                                detail='Pinecone have an error creating the Vector Index.')
+                                detail=f'Pinecone have an error creating the Vector Index.: {e}')
 
     def _create_user_chatbot(self, chatbot_info: RequestUserChatbotInfo, user_id: str) -> None:
-        self.repo._create_user_chatbot(user_id, chatbot_info.name, chatbot_info.index_name,
-                                       chatbot_info.open_ai_api_key,
-                                       chatbot_info.pinecone_api_key, chatbot_info.pinecone_environment,
-                                       chatbot_info.description)
+        self.repo.create_user_chatbot(user_id, chatbot_info.name, chatbot_info.index_name,
+                                      chatbot_info.open_ai_api_key,
+                                      chatbot_info.pinecone_api_key, chatbot_info.pinecone_environment,
+                                      chatbot_info.description)
 
-    def get_user_chatbots(self, user_id: str) -> list[UserChatbot]:
+    def get_user_chatbots(self, user_id: str = Depends(auth_handler.auth_wrapper)) -> list[UserChatbot]:
         return self.repo.get_user_chatbots(user_id)
 
     def get_user_chatbot(self, chatbot_id: str) -> UserChatbot:
@@ -55,4 +56,4 @@ class DataMangerFacadeImpl(IDataManagerFacade):
         self.repo.update_user_chatbot(chatbot_id, data)
 
 
-data_mangar_facade_impl = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
+data_manager = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))

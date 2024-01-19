@@ -1,13 +1,16 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile
+from icecream import ic
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 
+from src.domain.data_manager.entities.user_chatbot import UserChatbot
 from src.domain.data_manager.schemas.schemas import RequestDocument
+from src.infrastructure.auth.auth_handler_impl import auth_handler
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 from src.infrastructure.data_manager.cvs_docs_manager import CVSDocsManager
-from src.infrastructure.data_manager.data_manager_facade_impl import data_mangar_facade_impl
+from src.infrastructure.data_manager.data_manager_facade_impl import data_manager
 
 route = APIRouter(prefix='/data-manager',
                   tags=['Data Manager'], )
@@ -26,5 +29,10 @@ async def post_new_questions(documents: list[RequestDocument], index_name: str):
 
 
 @route.post("/v1/upload-file/csv/")
-async def upload_csv_file(data: Annotated[dict, Depends(data_mangar_facade_impl.create_new_index_from_csv)]):
+async def upload_csv_file(data: Annotated[dict, Depends(data_manager.create_new_index_from_csv)]):
+    return data
+
+
+@route.get("/v1/user/chat-bots/")
+async def get_user_chatbots(data: list[UserChatbot] = Depends(data_manager.get_user_chatbots)) -> list[UserChatbot]:
     return data
