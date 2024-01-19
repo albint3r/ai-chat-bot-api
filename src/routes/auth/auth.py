@@ -5,7 +5,7 @@ from src.domain.auth.schemas.schemas import AuthEmailRequest, SchemaLogIn, Schem
 
 from src.infrastructure.auth.auth_facade_impl import AuthFacadeImpl
 from src.infrastructure.auth.auth_handler_impl import auth_handler
-from src.infrastructure.repositories.auth.auth_repository import AuthRepository
+from src.infrastructure.auth.auth_repository import AuthRepository
 
 router = APIRouter(
     prefix='/auth',

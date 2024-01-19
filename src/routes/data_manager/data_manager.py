@@ -1,30 +1,22 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile
+from icecream import ic
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 
+from src.domain.data_manager.entities.user_chatbot import UserChatbot
 from src.domain.data_manager.schemas.schemas import RequestDocument
+from src.infrastructure.auth.auth_handler_impl import auth_handler
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 from src.infrastructure.data_manager.cvs_docs_manager import CVSDocsManager
+from src.infrastructure.data_manager.data_manager_facade_impl import data_manager
 
 route = APIRouter(prefix='/data-manager',
                   tags=['Data Manager'], )
 
 
-@route.post("/create-index/")
-async def create_new_index(files: Annotated[list[str], Depends(CVSDocsManager.get_all_upload_files)], index_name: str):
-    csv_docs_manager = CVSDocsManager(files_path=files, repo=PineconeRepository(), embeddings_model=OpenAIEmbeddings())
-    csv_docs_manager.repo.init()
-    response = csv_docs_manager.create_index(index_name)
-    if response:
-        return {"ok": 200}
-    else:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail='Unexpected error happened in the Vector Server')
-
-
-@route.post("/add-questions/")
+@route.post("/v1/add-questions/")
 async def post_new_questions(documents: list[RequestDocument], index_name: str):
     try:
         csv_docs_manager = CVSDocsManager(files_path=[], repo=PineconeRepository(), embeddings_model=OpenAIEmbeddings())
@@ -36,6 +28,11 @@ async def post_new_questions(documents: list[RequestDocument], index_name: str):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Fatal Error: {e}')
 
 
-@route.post("/upload-file/")
-async def create_upload_file(response: Annotated[dict, Depends(CVSDocsManager.save_uploaded_file)]):
-    return response
+@route.post("/v1/upload-file/csv/")
+async def upload_csv_file(data: Annotated[dict, Depends(data_manager.create_new_index_from_csv)]):
+    return data
+
+
+@route.get("/v1/user/chat-bots/")
+async def get_user_chatbots(data: list[UserChatbot] = Depends(data_manager.get_user_chatbots)) -> list[UserChatbot]:
+    return data

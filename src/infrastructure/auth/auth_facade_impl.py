@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 from src.domain.auth.schemas.schemas import SchemaSignin, SchemaLogIn
 from src.domain.auth.use_case.i_auth_facade import IAuthFacade
 from src.domain.auth.use_case.i_auth_handler import IAuthHandler
-from src.infrastructure.repositories.auth.auth_repository import AuthRepository
+from src.infrastructure.auth.auth_repository import AuthRepository
 
 
 class AuthFacadeImpl(IAuthFacade):

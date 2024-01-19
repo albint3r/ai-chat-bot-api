@@ -8,10 +8,12 @@ from src.domain.chat_bot.repositories.i_vectors_repository import IVectorReposit
 
 
 class PineconeRepository(IVectorRepository):
+    api_key: str | None = None
+    environment: str | None = None
 
     def init(self) -> None:
-        pinecone.init(api_key=credentials_provider.pinecone_ai_api_key,
-                      environment='asia-southeast1-gcp')
+        pinecone.init(api_key=self.api_key if self.api_key else credentials_provider.pinecone_ai_api_key,
+                      environment=self.environment if self.environment else 'asia-southeast1-gcp')
 
     def get(self, index_name: str) -> Index:
         return pinecone.Index(index_name)

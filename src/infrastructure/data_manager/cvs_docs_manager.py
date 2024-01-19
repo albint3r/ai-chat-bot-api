@@ -4,12 +4,12 @@ from pathlib import Path
 
 import pinecone
 from fastapi import UploadFile, status
+from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 from icecream import ic
 from langchain_community.document_loaders import CSVLoader
 from langchain_community.vectorstores.pinecone import Pinecone
 from langchain_core.documents import Document
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException
 
 from src.domain.chat_bot.errors.errors import ErrorFormatIndexName
 from src.domain.data_manager.use_case.i_docs_manager import IDocsManager
@@ -21,30 +21,42 @@ UPLOAD_FILES_PATH = "assets/uploads"
 class CVSDocsManager(IDocsManager):
 
     @staticmethod
-    def save_uploaded_file(file: UploadFile):
-        upload_folder = Path(UPLOAD_FILES_PATH)  # Carpeta donde se guardarán los archivos, asegúrate de que exista.
+    def save_uploaded_file(file: UploadFile, user_id: str) -> None:
         try:
-            # Verificar si la carpeta de destino existe, si no, créala.
-            upload_folder.mkdir(parents=True, exist_ok=True)
-
-            # Guardar el archivo en la carpeta de destino.
-            file_path = upload_folder / file.filename
+            user_folder = Path(UPLOAD_FILES_PATH) / user_id
+            # Verificar si la carpeta de destino para el usuario existe, si no, créala.
+            user_folder.mkdir(parents=True, exist_ok=True)
+            # Guardar el archivo en la carpeta de destino para el usuario.
+            file_path = user_folder / file.filename
             with file_path.open("wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
-            return JSONResponse(content={"filename": file.filename, "message": "File uploaded successfully"})
-        except Exception as e:
-            return JSONResponse(content={"filename": file.filename, "error": str(e)}, status_code=500)
+
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='It was an error uploading the file.')
 
     @staticmethod
-    def get_all_upload_files(file_path: str | None = UPLOAD_FILES_PATH):
-        directory = Path(file_path)
+    def get_all_upload_files(user_id: str, file_path: str | None = UPLOAD_FILES_PATH) -> list[str]:
         try:
-            files = [archivo.name for archivo in directory.glob("*")]
+            user_folder = Path(file_path) / user_id
+            files = [str(user_folder / archivo.name) for archivo in user_folder.glob("*")]
             if files:
                 return files
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not files in your [upload] directory')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'No files in user [{user_id}] directory')
         except Exception as e:
-            return f"Error at the moment to load files: {str(e)}"
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                detail=f"Error at the moment to load files: {str(e)}")
+
+    @staticmethod
+    def delete_user_folder(user_id: str, file_path: str | None = UPLOAD_FILES_PATH):
+        try:
+            user_folder = Path(file_path) / user_id
+            shutil.rmtree(user_folder)
+            return JSONResponse(content={"message": f"User [{user_id}] folder deleted successfully"})
+        except FileNotFoundError:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'User [{user_id}] not found')
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                detail=f"Error deleting user [{user_id}] folder: {str(e)}")
 
     def _get_documents_text(self, documents: list[Document], size: int = 2) -> list[str]:
         return [documents[i].page_content for i in range(size)]
@@ -55,9 +67,8 @@ class CVSDocsManager(IDocsManager):
         documents = []
         for file_path in self.files_path:
             loader = CSVLoader(file_path=file_path, encoding=encoding,
-                               # Todo: Add this fields to the load_files method in the abs class.
-                               source_column='question',
-                               metadata_columns=['question', 'category', 'answer'])
+                               # metadata_columns=['question', 'category', 'answer'],
+                               )
             if not documents:
                 documents = loader.load()
                 continue
