@@ -56,10 +56,13 @@ class DataMangerFacadeImpl(IDataManagerFacade):
         self.repo.update_user_chatbot(chatbot_id, data)
 
     def update_user_chatbot_activate_status(self, chabot_status: RequestChatBotActivateStatus):
-        data = chabot_status.model_dump()
-        data.pop('chatbot_id')
-        self.update_user_chatbot(chabot_status.chatbot_id, data)
-        return {'ok': 200}
+        try:
+            data = chabot_status.model_dump()
+            data.pop('chatbot_id')
+            self.update_user_chatbot(chabot_status.chatbot_id, data)
+            return {'ok': 200}
+        except Exception as e:
+            return {'error': e}
 
 
 data_manager = DataMangerFacadeImpl(repo=DataManagerRepository(db=db))
