@@ -6,6 +6,10 @@ class ErrorFormatIndexName(Exception):
     Can only contain lowercase letters, numbers, and hyphens."""
 
 
+class NotExitingChatId(Exception):
+    """The Provided ChatId don't exist"""
+
+
 class ExistingConnectionError(WebSocketException):
     """Raise an Error When the websocket connection already exist"""
 

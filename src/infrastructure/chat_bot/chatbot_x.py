@@ -1,17 +1,22 @@
 from typing import Any
 
+from icecream import ic
 from langchain_community.vectorstores import Pinecone
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableSerializable
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
+from credentials_provider import credentials_provider
+from src.db.db import db
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.repositories.i_vectors_repository import IVectorRepository
 from src.domain.chat_bot.use_case.i_chatbot_x import IChatBot
+from src.infrastructure.auth.auth_repository import AuthRepository
+from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 
 
 class ChatBotX(IChatBot):
@@ -35,9 +40,9 @@ class ChatBotX(IChatBot):
     def _format_docs(self, documents: list[Document]) -> str:
         return "\n\n".join(doc.page_content for doc in documents)
 
-    def generate_chain(self) -> RunnableSerializable | RunnableSerializable[Any, str]:
+    def generate_chain(self, llm) -> RunnableSerializable | RunnableSerializable[Any, str]:
         # Init Pinecone db
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+        # Verify is not home
         self.repo.init()
         # Todo: Add a class that wrap the vector store object:
         index = self.repo.get(self.index_name)
@@ -52,7 +57,7 @@ class ChatBotX(IChatBot):
                 | StrOutputParser()
         )
 
-    def query_question(self, query: Question) -> Answer:
-        chain = self.generate_chain()
+    def query_question(self, query: Question, llm) -> Answer:
+        chain = self.generate_chain(llm=llm)
         response = chain.invoke(query.text)
         return Answer(text=response)

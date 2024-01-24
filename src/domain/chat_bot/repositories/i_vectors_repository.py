@@ -11,14 +11,13 @@ class IVectorRepository(BaseModel, ABC):
 
     @validate_call()
     @abstractmethod
-    def init(self):
+    def init(self, **kwargs):
         """Initialize instance from Vector Db"""
 
     @validate_call()
     @abstractmethod
     def get(self, index_name: str):
         """Retrival the index db"""
-
 
     @abstractmethod
     def get_vectorstore(self, index_name: str, embeddings: Embeddings, text_key='text'):
