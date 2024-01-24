@@ -1,11 +1,13 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from icecream import ic
 from langchain.memory import ConversationBufferMemory
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
+from src.db.db import db
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.errors.errors import ExistingConnectionError
+from src.infrastructure.auth.auth_repository import AuthRepository
 from src.infrastructure.chat_bot.chat_connections_manager import chat_connection_manager
 from src.infrastructure.chat_bot.chatbot_qa_with_memory import ChatBotQAWithMemory
 from src.infrastructure.chat_bot.chatbot_x import ChatBotX
@@ -18,9 +20,15 @@ route = APIRouter(prefix='/chatbot',
 @route.post('/v1/qa-chatbot/{chat_id}')
 def qa_chatbot(question: Question, chat_id: str) -> Answer:
     # These are the default Values of the Chat.
-    chatbot = ChatBotX(index_name='tobecv', repo=PineconeRepository(),
-                       embeddings_model=OpenAIEmbeddings(), chat_id=chat_id)
-    answer = chatbot.query_question(question)
+    auth_repo = AuthRepository(db=db)
+    chabot_info = auth_repo.get_user_chatbot(chat_id)
+    chatbot = ChatBotX(index_name=chabot_info.index_name,
+                       repo=PineconeRepository(api_key=chabot_info.pinecone_api_key,
+                                               environment=chabot_info.pinecone_environment),
+                       embeddings_model=OpenAIEmbeddings(openai_api_key=chabot_info.open_ai_api_key))
+    answer = chatbot.query_question(question, llm=ChatOpenAI(model_name="gpt-3.5-turbo",
+                                                             temperature=0,
+                                                             api_key=chabot_info.open_ai_api_key))
     return answer
 
 

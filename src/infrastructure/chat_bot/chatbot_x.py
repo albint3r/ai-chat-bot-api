@@ -20,7 +20,6 @@ from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 
 
 class ChatBotX(IChatBot):
-    chat_id: str
     repo: IVectorRepository
     embeddings_model: Embeddings | None = None
     index_name: str
@@ -41,22 +40,9 @@ class ChatBotX(IChatBot):
     def _format_docs(self, documents: list[Document]) -> str:
         return "\n\n".join(doc.page_content for doc in documents)
 
-    def generate_chain(self) -> RunnableSerializable | RunnableSerializable[Any, str]:
+    def generate_chain(self, llm) -> RunnableSerializable | RunnableSerializable[Any, str]:
         # Init Pinecone db
         # Verify is not home
-        open_ai_api_key = credentials_provider.open_ai_api_key
-        if self.chat_id != 'home':
-            auth_repo = AuthRepository(db=db)
-            chabot_info = auth_repo.get_user_chatbot(self.chat_id)
-            open_ai_api_key = chabot_info.open_ai_api_key
-            pinecone_api_key = chabot_info.pinecone_api_key
-            pinecone_env = chabot_info.pinecone_environment
-            self.index_name = chabot_info.index_name
-            self.embeddings_model = OpenAIEmbeddings(openai_api_key=open_ai_api_key)
-            self.repo = PineconeRepository(api_key=pinecone_api_key, environment=pinecone_env)
-            ic()
-
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, api_key=open_ai_api_key)
         self.repo.init()
         # Todo: Add a class that wrap the vector store object:
         index = self.repo.get(self.index_name)
@@ -71,7 +57,7 @@ class ChatBotX(IChatBot):
                 | StrOutputParser()
         )
 
-    def query_question(self, query: Question) -> Answer:
-        chain = self.generate_chain()
+    def query_question(self, query: Question, llm) -> Answer:
+        chain = self.generate_chain(llm=llm)
         response = chain.invoke(query.text)
         return Answer(text=response)
