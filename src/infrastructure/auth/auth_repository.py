@@ -37,6 +37,7 @@ class AuthRepository(AbstractDB):
         query = f"DELETE FROM users WHERE user_id='{user_id}';"
         self.db.execute(query)
 
+    # todo: move this method to another class facade
     @validate_call()
     def get_user_chatbot(self, chat_id: str) -> UserChatbot:
         """Get the user from the database"""
