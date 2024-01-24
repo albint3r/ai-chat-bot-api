@@ -15,10 +15,11 @@ route = APIRouter(prefix='/chatbot',
                   tags=['Chat Bot'], )
 
 
-@route.post('/v1/qa-chatbot')
-def qa_chatbot(question: Question) -> Answer:
+@route.post('/v1/qa-chatbot/{chat_id}')
+def qa_chatbot(question: Question, chat_id: str) -> Answer:
+    # These are the default Values of the Chat.
     chatbot = ChatBotX(index_name='tobecv', repo=PineconeRepository(),
-                       embeddings_model=OpenAIEmbeddings())
+                       embeddings_model=OpenAIEmbeddings(), chat_id=chat_id)
     answer = chatbot.query_question(question)
     return answer
 
