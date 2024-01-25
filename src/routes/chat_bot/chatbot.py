@@ -1,4 +1,4 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException, status
 from icecream import ic
 from langchain.memory import ConversationBufferMemory
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -7,6 +7,7 @@ from src.db.db import db
 from src.domain.chat_bot.entities.answer import Answer
 from src.domain.chat_bot.entities.question import Question
 from src.domain.chat_bot.errors.errors import ExistingConnectionError
+from src.domain.data_manager.entities.user_chatbot import UserChatbot
 from src.infrastructure.auth.auth_repository import AuthRepository
 from src.infrastructure.chat_bot.chat_connections_manager import chat_connection_manager
 from src.infrastructure.chat_bot.chatbot_qa_with_memory import ChatBotQAWithMemory
@@ -15,6 +16,15 @@ from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 
 route = APIRouter(prefix='/chatbot',
                   tags=['Chat Bot'], )
+
+
+@route.post('/v1/chatbots/{chat_id}')
+def get_chatbot_info(chat_id: str) -> UserChatbot:
+    try:
+        auth_repo = AuthRepository(db=db)
+        return auth_repo.get_user_chatbot(chat_id)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The chat Id: {chat_id} dont exist')
 
 
 @route.post('/v1/qa-chatbot/{chat_id}')
