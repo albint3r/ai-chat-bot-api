@@ -52,7 +52,6 @@ def qa_chatbot(question: Question, chat_id: str) -> Answer:
 async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
     await chat_connection_manager.connect(websocket, chat_id)
     auth_repo = AuthRepository(db=db)
-    ic(chat_id)
     chatbot_info = auth_repo.get_user_chatbot(chat_id)
     if chatbot_info.is_active:
         try:
