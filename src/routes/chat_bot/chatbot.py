@@ -51,19 +51,26 @@ def qa_chatbot(question: Question, chat_id: str) -> Answer:
 @route.websocket('/v1/ws/qa-chatbot')
 async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
     await chat_connection_manager.connect(websocket, chat_id)
-    try:
-        chatbot = ChatBotQAWithMemory(index_name='tobecv', repo=PineconeRepository(),
-                                      embeddings_model=OpenAIEmbeddings())
-        chatbot.memory = ConversationBufferMemory(return_messages=True, output_key="answer", input_key="question")
-        while True:
-            data = await websocket.receive_json()
-            query = Question(**data)
-            inputs = {"question": query.text}
-            answer = chatbot.query_question(query, inputs)
-            await chat_connection_manager.brod_cast_user(answer.model_dump(), chat_id)
+    auth_repo = AuthRepository(db=db)
+    chatbot_info = auth_repo.get_user_chatbot(chat_id)
+    if chatbot_info.is_active:
+        try:
+            chatbot = ChatBotQAWithMemory(index_name=chatbot_info.index_name,
+                                          repo=PineconeRepository(api_key=chatbot_info.pinecone_api_key,
+                                                                  environment=chatbot_info.pinecone_environment),
+                                          embeddings_model=OpenAIEmbeddings(
+                                              openai_api_key=chatbot_info.open_ai_api_key))
+            chatbot.memory = ConversationBufferMemory(return_messages=True, output_key="answer", input_key="question")
+            while True:
+                data = await websocket.receive_json()
+                query = Question(**data)
+                inputs = {"question": query.text}
+                answer = chatbot.query_question(query, inputs)
+                await chat_connection_manager.brod_cast_user(answer.model_dump(), chat_id)
 
-    except WebSocketDisconnect:
-        ic(f"Close connection with chat_id: {chat_id}")
-        await chat_connection_manager.disconnect(websocket)
-    except ExistingConnectionError:
-        ic("Existing connection detected, rejecting the new connection")
+        except WebSocketDisconnect:
+            ic(f"Close connection with chat_id: {chat_id}")
+            await chat_connection_manager.disconnect(websocket)
+        except ExistingConnectionError:
+            ic("Existing connection detected, rejecting the new connection")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The chat Id: {chat_id} dont exist')
