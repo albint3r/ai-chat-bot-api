@@ -1,0 +1,10 @@
+¿Qué estudisaste?
+¿Cuántos años tienes progrando en python?
+¿Cuáles son tus proyectos en la industria de salud?
+¿Qué proyectos tienes en Machine Learning?
+¿Qué proyectos tienes en AI?
+¿Qué proyectos sabes hacer en criptos?
+¿Qué aplicaciones has hecho en flutter?
+¿Sabes usar FastApi?
+¿Sabes Usar Docker?
+¿Cuántos años tienes programando?

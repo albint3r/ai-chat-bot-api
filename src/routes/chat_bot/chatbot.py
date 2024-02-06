@@ -22,7 +22,11 @@ route = APIRouter(prefix='/chatbot',
 def get_chatbot_info(chat_id: str) -> UserChatbot:
     try:
         auth_repo = AuthRepository(db=db)
-        return auth_repo.get_user_chatbot(chat_id)
+        chatbot_info = auth_repo.get_user_chatbot(chat_id)
+        # Check if the chatbot is live
+        if chatbot_info.is_active:
+            return chatbot_info
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The chat Id: {chat_id} dont exist')
     except Exception:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The chat Id: {chat_id} dont exist')
 
@@ -31,15 +35,17 @@ def get_chatbot_info(chat_id: str) -> UserChatbot:
 def qa_chatbot(question: Question, chat_id: str) -> Answer:
     # These are the default Values of the Chat.
     auth_repo = AuthRepository(db=db)
-    chabot_info = auth_repo.get_user_chatbot(chat_id)
-    chatbot = ChatBotX(index_name=chabot_info.index_name,
-                       repo=PineconeRepository(api_key=chabot_info.pinecone_api_key,
-                                               environment=chabot_info.pinecone_environment),
-                       embeddings_model=OpenAIEmbeddings(openai_api_key=chabot_info.open_ai_api_key))
-    answer = chatbot.query_question(question, llm=ChatOpenAI(model_name="gpt-3.5-turbo",
-                                                             temperature=0,
-                                                             api_key=chabot_info.open_ai_api_key))
-    return answer
+    chatbot_info = auth_repo.get_user_chatbot(chat_id)
+    if chatbot_info.is_active:
+        chatbot = ChatBotX(index_name=chatbot_info.index_name,
+                           repo=PineconeRepository(api_key=chatbot_info.pinecone_api_key,
+                                                   environment=chatbot_info.pinecone_environment),
+                           embeddings_model=OpenAIEmbeddings(openai_api_key=chatbot_info.open_ai_api_key))
+        answer = chatbot.query_question(question, llm=ChatOpenAI(model_name="gpt-3.5-turbo",
+                                                                 temperature=0,
+                                                                 api_key=chatbot_info.open_ai_api_key))
+        return answer
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The chat Id: {chat_id} dont exist')
 
 
 @route.websocket('/v1/ws/qa-chatbot')
