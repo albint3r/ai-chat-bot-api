@@ -31,7 +31,7 @@ CREATE TABLE chatbots(
 
 CREATE TABLE conversations(
    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   conversation_id VARCHAR(36),
+   conversation_id VARCHAR(36) NOT NULL,
    chatbot_id VARCHAR(36) NOT NULL,
    FOREIGN KEY (chatbot_id) REFERENCES chatbots(chatbot_id) ON DELETE CASCADE
 );

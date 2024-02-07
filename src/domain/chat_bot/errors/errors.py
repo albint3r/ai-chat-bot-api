@@ -16,3 +16,11 @@ class ExistingConnectionError(WebSocketException):
 
 class ConnectionNotExist(WebSocketException):
     """Raise an Error When the websocket connection already exist"""
+
+
+class ExistingConversationError(Exception):
+    """Raise an error whe the user try to find an existed conversation"""
+
+
+class CreateConversationError(Exception):
+    """Raise an error whe the user try to create a convesation"""

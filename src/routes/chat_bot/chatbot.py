@@ -53,6 +53,11 @@ async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
     await chat_connection_manager.connect(websocket, chat_id)
     auth_repo = AuthRepository(db=db)
     chatbot_info = auth_repo.get_user_chatbot(chat_id)
+    # We need to save the conversation messages:
+    # 1) We need to create a conversation id
+    # 2) Create the conversion in the db
+    # 3) Add Messages to the conversation history in the db
+    # 4) Add the message to the entity
     if chatbot_info.is_active:
         try:
             chatbot = ChatBotQAWithMemory(index_name=chatbot_info.index_name,
@@ -65,7 +70,9 @@ async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
                 data = await websocket.receive_json()
                 query = Question(**data)
                 inputs = {"question": query.text}
-                answer = chatbot.query_question(query, inputs)
+                answer = chatbot.query_question(query, inputs, llm=ChatOpenAI(model_name="gpt-3.5-turbo",
+                                                                              temperature=0,
+                                                                              api_key=chatbot_info.open_ai_api_key))
                 await chat_connection_manager.brod_cast_user(answer.model_dump(), chat_id)
 
         except WebSocketDisconnect:
