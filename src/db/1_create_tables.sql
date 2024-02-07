@@ -29,20 +29,20 @@ CREATE TABLE chatbots(
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
---CREATE TABLE companies (
---    company_id VARCHAR(36) DEFAULT (UUID()) PRIMARY KEY UNIQUE,
---    company_name VARCHAR(50) NOT NULL
---);
---
---CREATE TABLE data_vectors (
---    data_vector_id VARCHAR(36) DEFAULT (UUID()) PRIMARY KEY UNIQUE,
---    user_id VARCHAR(36),
---    company_id VARCHAR(50) NOT NULL,
---    api_key VARCHAR(100) NOT NULL,
---    environment VARCHAR(50) NOT NULL,
---    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
---    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE
---);
+CREATE TABLE conversations(
+   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   conversation_id VARCHAR(36),
+   chatbot_id VARCHAR(36) NOT NULL,
+   FOREIGN KEY (chatbot_id) REFERENCES chatbots(chatbot_id) ON DELETE CASCADE
+);
+
+CREATE TABLE messages(
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message_id VARCHAR(36) DEFAULT (UUID()) PRIMARY KEY UNIQUE,
+    conversation_id VARCHAR(36) NOT NULL,
+    content VARCHAR(1000) NOT NULL,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(conversation_id) ON DELETE CASCADE
+);
 
 
 
