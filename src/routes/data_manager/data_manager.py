@@ -6,7 +6,8 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
-from src.domain.data_manager.schemas.schemas import RequestDocument, RequestChatBotActivateStatus
+from src.domain.data_manager.schemas.schemas import RequestDocument, RequestChatBotActivateStatus, \
+    SchemaDeleteUserChatbot
 from src.infrastructure.auth.auth_handler_impl import auth_handler
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
 from src.infrastructure.data_manager.cvs_docs_manager import CVSDocsManager
@@ -45,3 +46,8 @@ async def update_chatbot_to_activate_or_desactivate(
         return ok
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f'Error updating the chatbot status: {e}')
+
+
+@route.delete("/v1/delete/chatbot")
+async def delete_user_chatbot(data: SchemaDeleteUserChatbot, user_id: str = Depends(auth_handler.auth_wrapper)):
+    data_manager.delete_user_chatbot(user_id, data.chatbot_id, data.index_name, data.pinecone_api_key)

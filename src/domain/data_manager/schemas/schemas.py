@@ -19,3 +19,9 @@ class RequestUserChatbotInfo(BaseModel):
     open_ai_api_key: str
     pinecone_api_key: str
     pinecone_environment: str
+
+
+class SchemaDeleteUserChatbot(BaseModel):
+    chatbot_id: str
+    index_name: str
+    pinecone_api_key: str

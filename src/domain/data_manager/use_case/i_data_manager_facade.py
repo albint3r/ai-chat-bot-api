@@ -16,7 +16,7 @@ class IDataManagerFacade(BaseModel, ABC):
         """Get a User Chatbot instance in the SQL Table"""
 
     @abstractmethod
-    def delete_user_chatbot(self, chatbot_id: str) -> None:
+    def delete_user_chatbot(self, user_id: str, chatbot_id: str, index_name: str, pinecone_api_key: str) -> None:
         """Delete a User Chatbot instance in the SQL Table"""
 
     @abstractmethod
