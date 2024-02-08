@@ -1,6 +1,7 @@
 from operator import itemgetter
 from typing import Any
 
+from icecream import ic
 from langchain.memory import ConversationBufferMemory
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -24,8 +25,7 @@ class ChatBotQAWithMemory(IChatBot):
     index_name: str
     memory: ConversationBufferMemory | None = None
 
-    def generate_chain(self) -> RunnableSerializable | RunnableSerializable[Any, str]:
-        llm = ChatOpenAI(temperature=0)
+    def generate_chain(self, llm) -> RunnableSerializable | RunnableSerializable[Any, str]:
         self.repo.init()
         vectorstore = self.repo.get_vectorstore(self.index_name, self.embeddings_model, "text")
         retriever = vectorstore.as_retriever()
@@ -74,9 +74,8 @@ class ChatBotQAWithMemory(IChatBot):
 
         return loaded_memory | standalone_question | retrieved_documents | answer
 
-    def query_question(self, query: Question, inputs: dict[str, str]) -> Answer:
-        chain = self.generate_chain()
+    def query_question(self, query: Question, inputs: dict[str, str], llm) -> Answer:
+        chain = self.generate_chain(llm)
         response = chain.invoke(inputs, config={'callbacks': [ConsoleCallbackHandler()]})
         self.memory.save_context(inputs, {"answer": response["answer"]})
-        self.memory.load_memory_variables({})
         return Answer(text=response['answer'])
