@@ -44,9 +44,10 @@ def qa_chatbot(question: Question, chat_id: str) -> Answer:
                            repo=PineconeRepository(api_key=chatbot_info.pinecone_api_key,
                                                    environment=chatbot_info.pinecone_environment),
                            embeddings_model=OpenAIEmbeddings(openai_api_key=chatbot_info.open_ai_api_key))
-        answer = chatbot.query_question(question, llm=ChatOpenAI(model_name="gpt-3.5-turbo",
-                                                                 temperature=0,
-                                                                 api_key=chatbot_info.open_ai_api_key))
+        answer = chatbot.query_question(question,
+                                        llm=ChatOpenAI(model_name="gpt-3.5-turbo",
+                                                       temperature=0,
+                                                       api_key=chatbot_info.open_ai_api_key))
         return answer
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The chat Id: {chat_id} dont exist')
 
@@ -73,9 +74,7 @@ async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
                 data = await websocket.receive_json()
                 query = Question(**data)
                 # Here We save the question made by the user in the Conversation and message table
-                ic(query)
                 chat_msg = ChatMessage.from_message(str(conversation.conversation_id), query)
-                ic(chat_msg)
                 conversation.messages.append(chat_msg)
                 chatbot_repo.create_message(conversation_id=str(conversation.conversation_id), content=chat_msg.content)
                 inputs = {"question": query.text}
@@ -86,9 +85,9 @@ async def qa_with_memory_chatbot(websocket: WebSocket, chat_id: str):
                 chat_msg = ChatMessage.from_message(str(conversation.conversation_id), answer)
                 conversation.messages.append(chat_msg)
                 chatbot_repo.create_message(conversation_id=str(conversation.conversation_id), content=chat_msg.content)
-                print('*-'*100)
+                print('*-' * 100)
                 print(conversation)
-                print('*-'*100)
+                print('*-' * 100)
                 await chat_connection_manager.brod_cast_user(answer.model_dump(), chat_id)
 
         except WebSocketDisconnect:
