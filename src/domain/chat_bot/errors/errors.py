@@ -23,4 +23,8 @@ class ExistingConversationError(Exception):
 
 
 class CreateConversationError(Exception):
-    """Raise an error whe the user try to create a convesation"""
+    """Raise an error whe the user try to create a conversation"""
+
+
+class CreateMessageError(Exception):
+    """Raise an error whe the user try to create a Message"""

@@ -1,13 +1,10 @@
-from pydantic import BaseModel
-
 from src.db.db import AbstractDB
 from src.domain.chat_bot.entities.chat_message import ChatMessage
 from src.domain.chat_bot.entities.conversation import Conversation
-from src.domain.chat_bot.errors.errors import ExistingConversationError, CreateConversationError
+from src.domain.chat_bot.errors.errors import ExistingConversationError, CreateConversationError, CreateMessageError
 
 
-class ChatBotRepository(BaseModel):
-    db: AbstractDB
+class ChatBotRepository(AbstractDB):
 
     def get_conversation(self, conversation_id: str) -> Conversation:
         query = f"SELECT * FROM conversations WHERE conversation_id='{conversation_id}';"
@@ -18,7 +15,7 @@ class ChatBotRepository(BaseModel):
 
     def create_conversation(self, chatbot_id: str, conversation_id: str) -> None:
         try:
-            query = f"INSERT INTO conversation (chatbot_id, conversation_id) VALUES ('{chatbot_id}', '{conversation_id}');"
+            query = f"INSERT INTO conversations (chatbot_id, conversation_id) VALUES ('{chatbot_id}', '{conversation_id}');"
             self.db.execute(query)
         except Exception as _:
             raise CreateConversationError(f'It was a problem creating the conversation id: {conversation_id}')
@@ -30,5 +27,9 @@ class ChatBotRepository(BaseModel):
             return [ChatMessage(**response) for response in responses]
         raise ExistingConversationError(f'The conversation id: {conversation_id} not exist.')
 
-    def create_message(self, conversation_id: str) -> None:
-        query = f"INSERT INTO messages WHERE conversation_id={conversation_id}"
+    def create_message(self, conversation_id: str, content: str) -> None:
+        try:
+            query = f"INSERT INTO messages (conversation_id, content) VALUES ('{conversation_id}', '{content}');"
+            self.db.execute(query)
+        except Exception as _:
+            raise CreateMessageError('The query message have an error when was created.')

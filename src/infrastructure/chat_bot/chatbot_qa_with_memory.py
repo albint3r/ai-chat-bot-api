@@ -78,5 +78,4 @@ class ChatBotQAWithMemory(IChatBot):
         chain = self.generate_chain(llm)
         response = chain.invoke(inputs, config={'callbacks': [ConsoleCallbackHandler()]})
         self.memory.save_context(inputs, {"answer": response["answer"]})
-        self.memory.load_memory_variables({})
         return Answer(text=response['answer'])
