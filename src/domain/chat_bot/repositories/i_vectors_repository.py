@@ -1,3 +1,5 @@
+from typing import Any
+
 from langchain_core.embeddings import Embeddings
 from pydantic import BaseModel
 from abc import ABC, abstractmethod
@@ -10,7 +12,7 @@ class IVectorRepository(BaseModel, ABC):
         arbitrary_types_allowed = True
 
     @abstractmethod
-    def init(self, **kwargs):
+    def init(self, **kwargs) -> Any:
         """Initialize instance from Vector Db"""
 
     @abstractmethod
@@ -26,5 +28,5 @@ class IVectorRepository(BaseModel, ABC):
         """Create a new index db"""
 
     @abstractmethod
-    def delete(self, index_name: str, pinecone_api_key: str):
+    def delete(self, index_name: str):
         """Delete the user index in Pinecone"""

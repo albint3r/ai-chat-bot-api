@@ -50,4 +50,5 @@ async def update_chatbot_to_activate_or_desactivate(
 
 @route.delete("/v1/delete/chatbot")
 async def delete_user_chatbot(data: SchemaDeleteUserChatbot, user_id: str = Depends(auth_handler.auth_wrapper)):
-    data_manager.delete_user_chatbot(user_id, data.chatbot_id, data.index_name, data.pinecone_api_key)
+    ic(data)
+    data_manager.delete_user_chatbot(user_id, data)

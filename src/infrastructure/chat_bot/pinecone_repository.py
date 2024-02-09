@@ -27,7 +27,6 @@ class PineconeRepository(IVectorRepository):
     def create(self, index_name: str, dimension=1536, metric='cosine') -> None:
         pinecone.create_index(name=index_name, dimension=dimension, metric=metric)
 
-    def delete(self, index_name: str, pinecone_api_key: str):
-        pc = ic(pinecone.Pinecone(api_key=pinecone_api_key))
-        pc.delete_index(index_name)
+    def delete(self, index_name: str):
+        pinecone.delete_index(index_name)
         ic(f'You delete succefully the Pinecone db: {index_name}')

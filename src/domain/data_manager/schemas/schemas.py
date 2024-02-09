@@ -25,3 +25,4 @@ class SchemaDeleteUserChatbot(BaseModel):
     chatbot_id: str
     index_name: str
     pinecone_api_key: str
+    pinecone_environment: str
