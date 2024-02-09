@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
+from src.domain.data_manager.schemas.schemas import SchemaDeleteUserChatbot
 
 
 class IDataManagerFacade(BaseModel, ABC):
@@ -16,7 +17,7 @@ class IDataManagerFacade(BaseModel, ABC):
         """Get a User Chatbot instance in the SQL Table"""
 
     @abstractmethod
-    def delete_user_chatbot(self, chatbot_id: str) -> None:
+    def delete_user_chatbot(self, user_id: str, data: SchemaDeleteUserChatbot) -> None:
         """Delete a User Chatbot instance in the SQL Table"""
 
     @abstractmethod

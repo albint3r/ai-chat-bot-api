@@ -1,6 +1,7 @@
 from icecream import ic
 
 from src.db.db import AbstractDB
+from src.domain.chat_bot.errors.errors import DeleteChatBotError
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
 from fastapi import HTTPException, status
 
@@ -31,9 +32,13 @@ class DataManagerRepository(AbstractDB):
         if response:
             return UserChatbot(**response)
 
-    def delete_user_chatbot(self, chatbot_id: str) -> None:
-        query = f"DELETE FROM chatbots WHERE chatbot_id='{chatbot_id}';"
-        self.db.execute(query)
+    def delete_user_chatbot(self, chatbot_id: str, user_id: str) -> None:
+        try:
+            query = (f"DELETE FROM chatbots WHERE chatbot_id= '{chatbot_id}' AND "
+                     f"user_id='{user_id}';")
+            self.db.execute(query)
+        except Exception as _:
+            raise DeleteChatBotError(f'You have an error deleting the current chatbot id: {chatbot_id}')
 
     def update_user_chatbot(self, chatbot_id: str, data: dict) -> None:
         try:

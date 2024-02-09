@@ -28,3 +28,7 @@ class CreateConversationError(Exception):
 
 class CreateMessageError(Exception):
     """Raise an error whe the user try to create a Message"""
+
+
+class DeleteChatBotError(Exception):
+    """Raise an error if it had problems when the user try to delete the chatbot"""

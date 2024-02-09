@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException, status
 from fastapi import UploadFile
-from icecream import ic
 from langchain_openai import OpenAIEmbeddings
 
 from src.db.db import db
 from src.domain.data_manager.entities.user_chatbot import UserChatbot
-from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo, RequestChatBotActivateStatus
+from src.domain.data_manager.schemas.schemas import RequestUserChatbotInfo, RequestChatBotActivateStatus, \
+    SchemaDeleteUserChatbot
 from src.domain.data_manager.use_case.i_data_manager_facade import IDataManagerFacade
 from src.infrastructure.auth.auth_handler_impl import auth_handler
 from src.infrastructure.chat_bot.pinecone_repository import PineconeRepository
@@ -49,8 +49,12 @@ class DataMangerFacadeImpl(IDataManagerFacade):
     def get_user_chatbot(self, chatbot_id: str) -> UserChatbot:
         return self.repo.get_user_chatbot(chatbot_id)
 
-    def delete_user_chatbot(self, chatbot_id: str) -> None:
-        self.repo.delete_user_chatbot(chatbot_id)
+    def delete_user_chatbot(self, user_id: str, data: SchemaDeleteUserChatbot) -> None:
+        pinecone_repo = PineconeRepository(api_key=data.pinecone_api_key,
+                                           environment=data.pinecone_environment)
+        pinecone_repo.init()
+        self.repo.delete_user_chatbot(data.chatbot_id, user_id)
+        pinecone_repo.delete(data.index_name)
 
     def update_user_chatbot(self, chatbot_id: str, data: dict):
         self.repo.update_user_chatbot(chatbot_id, data)
