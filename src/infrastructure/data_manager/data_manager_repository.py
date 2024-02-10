@@ -32,6 +32,14 @@ class DataManagerRepository(AbstractDB):
         if response:
             return UserChatbot(**response)
 
+    def is_user_chatbot_owner(self, chatbot_id: str, user_id: str) -> UserChatbot:
+        query = f"SELECT * FROM chatbots WHERE chatbot_id='{chatbot_id}' AND user_id='{user_id}';"
+        response = self.db.query(query)
+        if response:
+            return UserChatbot(**response)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Error: The user is not owner of the chat.')
+
     def delete_user_chatbot(self, chatbot_id: str, user_id: str) -> None:
         try:
             query = (f"DELETE FROM chatbots WHERE chatbot_id= '{chatbot_id}' AND "
